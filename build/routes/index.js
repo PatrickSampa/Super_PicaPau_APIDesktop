@@ -8,9 +8,11 @@ const express_1 = __importDefault(require("express"));
 const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const swagger_1 = require("../config/swagger");
-const RequestSapiens_routes_1 = require("./RequestSapiens.routes");
+const GetInformationsForSamirroutes_routes_1 = require("./GetInformationsForSamirroutes.routes");
+const InsertSapiensForSamir_routes_1 = require("./InsertSapiensForSamir.routes");
 exports.routes = (0, express_1.default)();
-exports.routes.use("/", RequestSapiens_routes_1.routerAuth);
+exports.routes.use("/samir", InsertSapiensForSamir_routes_1.routerInsertSapiens);
+exports.routes.use("/samir", GetInformationsForSamirroutes_routes_1.routerGetInformationsForPicaPau);
 const swaggerSpec = (0, swagger_jsdoc_1.default)(swagger_1.Options);
 exports.routes.use('/docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerSpec));
 exports.routes.use((req, res, next) => {

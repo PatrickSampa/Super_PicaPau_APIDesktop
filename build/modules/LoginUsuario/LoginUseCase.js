@@ -4,6 +4,7 @@ exports.LoginUseCase = void 0;
 const loginSapiens_1 = require("../../pytonRequest/loginSapiens");
 class LoginUseCase {
     async execute(data) {
+        console.log("login inicializado");
         return await (0, loginSapiens_1.LoginSapiens)(data);
     }
 }

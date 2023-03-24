@@ -8,8 +8,8 @@ class GetUsuarioController {
     async handle(request, response) {
         const { Coockie } = request.body;
         try {
-            const cookie = await this.GetUsuarioUseCase.execute(Coockie);
-            response.status(200).json(cookie);
+            const result = await this.GetUsuarioUseCase.execute(Coockie);
+            response.status(200).json(result);
         }
         catch (error) {
             return response.status(400).json({

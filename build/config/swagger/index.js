@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Options = exports.swaggerDefinition = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const PORT = process.env.PORT;
+const PORT = process.env.API_PORT;
 const urlAPI = `http://localhost:${PORT}`;
 const PORT_DOCKER = process.env.PORT_DOCKER;
 const urlDOCKER = `http://localhost:${PORT_DOCKER}`;
@@ -22,22 +22,26 @@ exports.swaggerDefinition = {
         },
         contact: {
             name: 'GITHUB PROJECT',
-            url: 'https://jsonplaceholder.typicode.com',
+            url: 'https://github.com/moisesPompilio/visao-api.git',
         },
     },
     servers: [
         {
-            url: urlDOCKER,
-            description: 'Development server in the docker',
+            url: "https://picapau-testeserver.onrender.com/",
+            description: 'Render server',
         },
         {
             url: urlAPI,
             description: 'Development server',
         },
+        {
+            url: urlDOCKER,
+            description: 'Development server in the docker',
+        },
     ],
 };
 exports.Options = {
     swaggerDefinition: exports.swaggerDefinition,
-    apis: ['./src/routes/*.ts', './src/entities/*.ts', './src/modules/*/*.ts', './src/type/*.ts'],
+    apis: ['./src/routes/*.ts', './src/entities/*.ts', './src/modules/*/*.ts', './src/type/*.ts', './src/DTO/*.ts'],
 };
 //# sourceMappingURL=index.js.map
