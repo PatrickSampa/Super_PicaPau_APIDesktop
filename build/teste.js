@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.api = void 0;
-const GetInformationFromSapienForSamirUseCase_1 = require("./modules/GetInformationFromSapienForSamir/GetInformationFromSapienForSamirUseCase");
-exports.api = new GetInformationFromSapienForSamirUseCase_1.GetInformationFromSapienForSamirUseCase();
+exports.randomIntFromInterval = void 0;
+function randomIntFromInterval(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+exports.randomIntFromInterval = randomIntFromInterval;
 //# sourceMappingURL=teste.js.map

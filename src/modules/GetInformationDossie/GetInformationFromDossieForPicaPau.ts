@@ -3,18 +3,22 @@ import { dataPrevidencias } from "./InformationPro";
 import { calcularIdade } from "./GetInformationIdade";
 import { litispendencia } from "./GetInformationLitispendencia";
 import { seguradoEspecial } from "./GetInformationSeguradoEspecial";
-
+import { requerimentosAtivos } from "./InformatioReque";
 
 export class GetInformationDossieForPicaPau{
     async impedimentos(paginaDosprevFormatada: any, parginaDosPrev: any): Promise<Array<string>>{
         const ArrayImpedimentos: Array<string> = [];
 
-
-        const DatasAtualEMenosDezesseis: Array<Date> = await requerimentos.dataRequerimento(paginaDosprevFormatada);
+        try{
+            const DatasAtualEMenosDezesseis: Array<Date> = await requerimentos.dataRequerimento(paginaDosprevFormatada);
         const verificarDataFinal: boolean = await dataPrevidencias.Previdenciarias(DatasAtualEMenosDezesseis[0], DatasAtualEMenosDezesseis[1], paginaDosprevFormatada);
         if(verificarDataFinal){
             ArrayImpedimentos.push("EMPREGO")
         }
+        }catch{
+            ArrayImpedimentos.push("ERRO DOSPREV EMPREGO")
+        }
+        
 
         const verificarIdade = await calcularIdade.calcIdade(paginaDosprevFormatada);
         if(!verificarIdade){
@@ -28,14 +32,14 @@ export class GetInformationDossieForPicaPau{
                                              
          }
 
+         
 
          const segurado =  await seguradoEspecial.handle(parginaDosPrev);
-         if(segurado !== -1){
+        const requerimentoAtivo: boolean = await requerimentosAtivos.handle(paginaDosprevFormatada)
+         
+        if(segurado !== -1 || requerimentoAtivo == true){
             ArrayImpedimentos.push("CONCESSÃO ANTERIOR")
         }
-
-
-
 
         return ArrayImpedimentos;
     }

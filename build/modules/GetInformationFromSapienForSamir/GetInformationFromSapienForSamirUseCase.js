@@ -9,11 +9,17 @@ const index_1 = require("../GetArvoreDocumento/index");
 const GetDocumento_1 = require("../GetDocumento");
 const UpdateEtiqueta_1 = require("../UpdateEtiqueta");
 const GetTextoPorXPATH_1 = require("../../helps/GetTextoPorXPATH");
-const verifica_aoSeDosPrevInvalido_1 = require("./verifica\u00E7aoSeDosPrevInvalido");
 const coletarArvoreDeDocumentoDoPassivo_1 = require("./coletarArvoreDeDocumentoDoPassivo");
 const GetCapaDoPassiva_1 = require("../GetCapaDoPassiva");
 const GetInformationCapa_1 = require("../GetInformationCapa");
 const GetInformationDossie_1 = require("../GetInformationDossie");
+const teste1_1 = require("../GetPdfSislabra/teste1");
+const GetPdfForPicaPau_1 = require("../GetPdfSislabra/GetPdfSislabra/GetPdfForPicaPau");
+const EmpregoSislabra_1 = require("../GetPdfSislabra/GetRegraSislabra/EmpregoSislabra");
+const Ve_culoSislabra_1 = require("../GetPdfSislabra/GetRegraSislabra/Ve\u00EDculoSislabra");
+const enderecoEncontrado_1 = require("../GetPdfSislabra/GetRegraSislabra/enderecoEncontrado");
+const DoacoesEleitoraisSislabra_1 = require("../GetPdfSislabra/GetRegraSislabra/DoacoesEleitoraisSislabra");
+const imoveisSaopaulo_1 = require("../GetPdfSislabra/GetRegraSislabra/imoveisSaopaulo");
 class GetInformationFromSapienForSamirUseCase {
     async execute(data) {
         const cookie = await LoginUsuario_1.loginUseCase.execute(data.login);
@@ -36,40 +42,208 @@ class GetInformationFromSapienForSamirUseCase {
                     (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV COM FALHA NA PESQUISA", tarefaId }));
                     continue;
                 }
-                var objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
-                var objectDosPrevNaoExisti = objectDosPrev == null;
+                const arrayDosIDParaBuscarpdf = [];
+                const arrayIdSislabra = [];
+                const paginaCapaFormatada = new JSDOM(await GetCapaDoPassiva_1.getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie));
+                let objectDosPrev = "";
+                var procurarDossies = arrayDeDocumentos.filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
+                var objectDosPrevNaoExisti = procurarDossies[0] == null;
                 if (objectDosPrevNaoExisti) {
                     arrayDeDocumentos = await (0, coletarArvoreDeDocumentoDoPassivo_1.coletarArvoreDeDocumentoDoPassivo)(objectGetArvoreDocumento);
-                    objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
-                    objectDosPrevNaoExisti = objectDosPrev == null;
+                    procurarDossies[0] = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
+                    objectDosPrevNaoExisti = procurarDossies[0] == null;
                     if (objectDosPrevNaoExisti) {
                         console.log("DOSPREV NÃO ECONTRADO");
                         (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ECONTRADO", tarefaId }));
                         continue;
                     }
                 }
-                const dosPrevSemIdParaPesquisa = (objectDosPrev.documentoJuntado.componentesDigitais.length) <= 0;
+                const dosPrevSemIdParaPesquisa = (procurarDossies[0].documentoJuntado.componentesDigitais.length) <= 0;
                 if (dosPrevSemIdParaPesquisa) {
                     console.log("DOSPREV COM FALHA NA PESQUISA");
                     (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV COM FALHA NA PESQUISA", tarefaId }));
                     continue;
                 }
-                const idDosprevParaPesquisa = objectDosPrev.documentoJuntado.componentesDigitais[0].id;
-                const parginaDosPrev = await GetDocumento_1.getDocumentoUseCase.execute({ cookie, idDocument: idDosprevParaPesquisa });
-                const parginaDosPrevFormatada = new JSDOM(parginaDosPrev);
-                const xpathInformacaoDeCabeçalho = "/html/body/div/p[2]/b[1]";
-                const informacaoDeCabeçalho = (0, GetTextoPorXPATH_1.getXPathText)(parginaDosPrevFormatada, xpathInformacaoDeCabeçalho);
-                const informacaoDeCabeçalhoNaoExiste = !informacaoDeCabeçalho;
-                if (informacaoDeCabeçalhoNaoExiste) {
-                    console.log("DOSPREV INVALIDO");
-                    (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV INVALIDO", tarefaId }));
+                let idDosprevParaPesquisaId = procurarDossies[0].documentoJuntado.componentesDigitais[0].id;
+                let parginaDosPrevParaId = await GetDocumento_1.getDocumentoUseCase.execute({ cookie, idDocument: idDosprevParaPesquisaId });
+                let parginaDosPrevFormatadaParaId = new JSDOM(parginaDosPrevParaId);
+                let idDosprevParaPesquisa = "";
+                let parginaDosPrev = "";
+                let parginaDosPrevFormatada = "";
+                let idProcurarPoloAtivo = 1;
+                let whileVerificar = true;
+                let CpfAutor = "";
+                while (whileVerificar) {
+                    const tabelasProcurarAtivo = (0, GetTextoPorXPATH_1.getXPathText)(paginaCapaFormatada, `html/body/div/div[6]/table/tbody/tr[${idProcurarPoloAtivo}]`);
+                    const regex = /\s{3}/;
+                    const tabelasProcurarAtivoSemEspaco = tabelasProcurarAtivo.replace(regex, ",");
+                    if (tabelasProcurarAtivoSemEspaco.indexOf("REQUERENTE (PÓLO ATIVO)") != -1) {
+                        whileVerificar = false;
+                        const indiceAbertura = tabelasProcurarAtivoSemEspaco.indexOf("(");
+                        const indiceFechamento = tabelasProcurarAtivoSemEspaco.indexOf(")");
+                        if (indiceAbertura !== -1 && indiceFechamento !== -1 && indiceAbertura < indiceFechamento) {
+                            const conteudoEntreParenteses = tabelasProcurarAtivoSemEspaco.substring(indiceAbertura + 1, indiceFechamento);
+                            const numerosSemPontos = conteudoEntreParenteses.replace(/\.|-/g, "");
+                            CpfAutor = numerosSemPontos;
+                        }
+                    }
+                    idProcurarPoloAtivo++;
+                }
+                let IdDosErroCatch = "";
+                const xpatgCpfAutor = '/html/body/div/div[1]/table/tbody/tr[7]/td';
+                const verificarCpfParaEntrarNoIf = (0, GetTextoPorXPATH_1.getXPathText)(parginaDosPrevFormatadaParaId, xpatgCpfAutor);
+                if (verificarCpfParaEntrarNoIf != CpfAutor) {
+                    try {
+                        for (let j = 0; j < procurarDossies.length; j++) {
+                            IdDosErroCatch = procurarDossies[j];
+                            let idDos = procurarDossies[j].documentoJuntado.componentesDigitais[0].id;
+                            let novoObjetoDos = procurarDossies[j];
+                            let parginaDosPrevParaverificar = await GetDocumento_1.getDocumentoUseCase.execute({ cookie, idDocument: idDos });
+                            let parginaDosPrevFormatadaVerificar = new JSDOM(parginaDosPrevParaverificar);
+                            let verificarCpf = (0, GetTextoPorXPATH_1.getXPathText)(parginaDosPrevFormatadaVerificar, xpatgCpfAutor);
+                            if (verificarCpf == CpfAutor) {
+                                console.log("Entrou");
+                                objectDosPrev = novoObjetoDos;
+                                idDosprevParaPesquisa = objectDosPrev.documentoJuntado.componentesDigitais[0].id;
+                                parginaDosPrev = await GetDocumento_1.getDocumentoUseCase.execute({ cookie, idDocument: idDosprevParaPesquisa });
+                                parginaDosPrevFormatada = new JSDOM(parginaDosPrev);
+                                break;
+                            }
+                        }
+                    }
+                    catch (_a) {
+                        var objectDosPrevNaoExisti = IdDosErroCatch == null;
+                        if (objectDosPrevNaoExisti) {
+                            arrayDeDocumentos = await (0, coletarArvoreDeDocumentoDoPassivo_1.coletarArvoreDeDocumentoDoPassivo)(objectGetArvoreDocumento);
+                            IdDosErroCatch = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
+                            objectDosPrevNaoExisti = IdDosErroCatch == null;
+                            if (objectDosPrevNaoExisti) {
+                                console.log("DOSPREV NÃO ECONTRADO");
+                                (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ECONTRADO", tarefaId }));
+                                continue;
+                            }
+                        }
+                        const dosPrevSemIdParaPesquisa = (IdDosErroCatch.documentoJuntado.componentesDigitais.length) <= 0;
+                        if (dosPrevSemIdParaPesquisa) {
+                            console.log("DOSPREV COM FALHA NA PESQUISA");
+                            (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV COM FALHA NA PESQUISA", tarefaId }));
+                            continue;
+                        }
+                        objectDosPrev = IdDosErroCatch;
+                        idDosprevParaPesquisa = objectDosPrev.documentoJuntado.componentesDigitais[0].id;
+                        parginaDosPrev = await GetDocumento_1.getDocumentoUseCase.execute({ cookie, idDocument: idDosprevParaPesquisa });
+                        parginaDosPrevFormatada = new JSDOM(parginaDosPrev);
+                    }
+                }
+                else {
+                    objectDosPrev = procurarDossies[0];
+                    idDosprevParaPesquisa = objectDosPrev.documentoJuntado.componentesDigitais[0].id;
+                    parginaDosPrev = await GetDocumento_1.getDocumentoUseCase.execute({ cookie, idDocument: idDosprevParaPesquisa });
+                    parginaDosPrevFormatada = new JSDOM(parginaDosPrev);
+                }
+                var objDosis = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - ANEXADO" && Documento.documentoJuntado.tipoDocumento.sigla == "PESBEN");
+                var objDosis2 = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - AUTOR");
+                var objDosis3 = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - POSSÍVEL CÔNJUGE OU COMPANHEIRO");
+                arrayIdSislabra.push(...objDosis, ...objDosis2, ...objDosis3);
+                if (arrayIdSislabra.length <= 0) {
+                    (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "SISLABRA NÃO ENCONTRADO", tarefaId }));
                     continue;
                 }
-                if ((0, verifica_aoSeDosPrevInvalido_1.VerificaçaoSeDosPrevInvalido)(informacaoDeCabeçalho)) {
-                    console.log("DOSPREV INVALIDO");
-                    (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV INVALIDO", tarefaId }));
+                if (arrayIdSislabra.length > 2) {
+                    (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "FALHA AO EXAMINAR SISLABRA", tarefaId }));
                     continue;
                 }
+                if (arrayIdSislabra.length == 1) {
+                    const idParaBuscarIdSislabra1 = arrayIdSislabra[0].documentoJuntado.componentesDigitais[0].id;
+                    arrayDosIDParaBuscarpdf.push(idParaBuscarIdSislabra1);
+                }
+                else {
+                    const idParaBuscarIdSislabra1 = arrayIdSislabra[0].documentoJuntado.componentesDigitais[0].id;
+                    const idParaBuscarIdSislabra2 = arrayIdSislabra[1].documentoJuntado.componentesDigitais[0].id;
+                    arrayDosIDParaBuscarpdf.push(idParaBuscarIdSislabra1, idParaBuscarIdSislabra2);
+                }
+                console.log(CpfAutor);
+                const xpatgCpfAutorFormatado = (0, GetTextoPorXPATH_1.getXPathText)(parginaDosPrevFormatada, xpatgCpfAutor);
+                const pathNomeAutor = '/html/body/div/div[1]/table/tbody/tr[6]/td';
+                const pathNomeAutorFormatado = (0, GetTextoPorXPATH_1.getXPathText)(parginaDosPrevFormatada, pathNomeAutor);
+                var VerificarAutorMaisDeUmaAutorEmpresa = 0;
+                var VerificarAutorMaisDeUmaConjugeEmpresa = 0;
+                var VerificarAutorMaisDeUmaAutorVeiculo = 0;
+                var VerificarAutorMaisDeUmaConjugeVeiculo = 0;
+                var VerificarAutorMaisDeUmaAutorEndereco = 0;
+                var VerificarAutorMaisDeUmaConjugeEndereco = 0;
+                var VerificarAutorMaisDeUmaAutorDoacoes = 0;
+                var VerificarAutorMaisDeUmaConjugeDoacoes = 0;
+                var VerificarAutorMaisDeUmaAutorImoveis = 0;
+                var VerificarAutorMaisDeUmaConjugeImoveis = 0;
+                for (let i = 0; i < arrayDosIDParaBuscarpdf.length; i++) {
+                    await (0, GetPdfForPicaPau_1.downloadPDFWithCookies)(`https://sapiens.agu.gov.br/documento/${arrayDosIDParaBuscarpdf[i]}`, cookie)
+                        .then(() => console.log('PDF downloaded successfully!'))
+                        .catch((error) => console.error('Error downloading PDF:', error));
+                    console.log("Entrou aqui");
+                    try {
+                        console.log("aqui");
+                        const pdf = await (0, teste1_1.readPDF)('resources/app/build/modules/GetPdfSislabra/GetPdfSislabra/sislabra.pdf');
+                        const impedEmprego = (0, EmpregoSislabra_1.verificarArraySislabra)(pdf, CpfAutor);
+                        if (impedEmprego.length >= 2 && VerificarAutorMaisDeUmaAutorEmpresa < 1) {
+                            VerificarAutorMaisDeUmaAutorEmpresa++;
+                            responseForPicaPau.push("Empresa autor");
+                        }
+                        else if (impedEmprego[0] == true && VerificarAutorMaisDeUmaConjugeEmpresa < 1 && impedEmprego.length < 2) {
+                            VerificarAutorMaisDeUmaConjugeEmpresa++;
+                            responseForPicaPau.push("Empresa cônjuge");
+                        }
+                        else {
+                            console.log("Não tem impeditivo empresa");
+                        }
+                        const impeditivoVeiculoBolean = (0, Ve_culoSislabra_1.impeditivoVeiculo)(pdf, CpfAutor);
+                        console.log("AQUI NO FOR " + impeditivoVeiculoBolean);
+                        if (impeditivoVeiculoBolean.length > 1 && VerificarAutorMaisDeUmaAutorVeiculo < 1) {
+                            console.log("VEICULO AUTOR");
+                            console.log(impeditivoVeiculoBolean.length);
+                            VerificarAutorMaisDeUmaAutorVeiculo++;
+                            responseForPicaPau.push("VEICULO AUTOR");
+                        }
+                        else if (impeditivoVeiculoBolean.length == 1 && impeditivoVeiculoBolean[0] == true && VerificarAutorMaisDeUmaConjugeVeiculo < 1) {
+                            console.log("VEICULO cônjuge");
+                            VerificarAutorMaisDeUmaConjugeVeiculo++;
+                            responseForPicaPau.push("VEICULO cônjuge");
+                        }
+                        const enderecosBolean = (0, enderecoEncontrado_1.enderecosEncontrados)(pdf, CpfAutor);
+                        if (enderecosBolean.length > 1 && VerificarAutorMaisDeUmaAutorEndereco < 1) {
+                            VerificarAutorMaisDeUmaAutorEndereco++;
+                            responseForPicaPau.push(" Cidade Autor");
+                        }
+                        else if (enderecosBolean.length == 1 && VerificarAutorMaisDeUmaConjugeEndereco < 1) {
+                            VerificarAutorMaisDeUmaConjugeEndereco++;
+                            responseForPicaPau.push("cidade Cônjuge");
+                        }
+                        const doacoesSislabra = (0, DoacoesEleitoraisSislabra_1.doacoesEleitorais)(pdf, CpfAutor);
+                        if (doacoesSislabra.length > 1 && VerificarAutorMaisDeUmaAutorDoacoes < 1) {
+                            VerificarAutorMaisDeUmaAutorDoacoes++;
+                            responseForPicaPau.push(" Doações Eleitorais Autor");
+                        }
+                        else if (doacoesSislabra.length == 1 && VerificarAutorMaisDeUmaConjugeDoacoes < 1) {
+                            VerificarAutorMaisDeUmaConjugeDoacoes++;
+                            responseForPicaPau.push(" Doações Eleitorais Cônjuge");
+                        }
+                        const imoveisSP = (0, imoveisSaopaulo_1.imoveisSp)(pdf, CpfAutor);
+                        if (imoveisSP.length > 1 && VerificarAutorMaisDeUmaAutorImoveis < 1) {
+                            VerificarAutorMaisDeUmaAutorImoveis++;
+                            responseForPicaPau.push("Imoveis SP Autor");
+                        }
+                        else if (imoveisSP.length == 1 && VerificarAutorMaisDeUmaConjugeImoveis < 1) {
+                            VerificarAutorMaisDeUmaConjugeImoveis++;
+                            responseForPicaPau.push(" Imoveis SP Cônjuge");
+                        }
+                        (0, GetPdfForPicaPau_1.deletePDF)('sislabra.pdf');
+                    }
+                    catch (_b) {
+                        (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "ERRO AO EXAMINAR SISLABRA", tarefaId }));
+                        continue;
+                    }
+                }
+                console.log(responseForPicaPau);
                 let impedCapa = await GetInformationCapa_1.impedimentosCapa.Impedimentos(await GetCapaDoPassiva_1.getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie));
                 responseForPicaPau.push(...impedCapa);
                 let impedDossie = await GetInformationDossie_1.getInformationDossieForPicaPau.impedimentos(parginaDosPrevFormatada, parginaDosPrev);

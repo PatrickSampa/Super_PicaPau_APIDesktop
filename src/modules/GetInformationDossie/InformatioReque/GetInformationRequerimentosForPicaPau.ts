@@ -1,7 +1,7 @@
 import { getXPathText } from "../../../helps/GetTextoPorXPATH";
 import { extractDatesFromString } from "../../../helps/FiltrarDatas";
 import { encontrarDataMaisAtual } from "../../../helps/VerificarDataMaisAtual";
-import { SubtrairAnoMaisAtual } from "../../../helps/subtrairanoAtual";
+import { SubtrairAnoMaisAtual } from "../../../helps/subtrairAnoAtual";
 
 
 export class DatasRequerimento{

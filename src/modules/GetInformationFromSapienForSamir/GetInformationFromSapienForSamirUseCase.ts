@@ -27,12 +27,17 @@ import {impedimentosCapa } from '../GetInformationCapa';
 //import { IdentificarAdvogadoPilantra, VerificarIdadeCapa } from '../GetInformationCapa/GetInformationCapaForPicaPau';
 import { extractDatesFromString } from '../../helps/FiltrarDatas';
 import { encontrarDataMaisAtual } from '../../helps/VerificarDataMaisAtual';
-import { SubtrairAnoMaisAtual } from '../../helps/subtrairanoAtual';
 import { ordenarDatas } from '../../helps/BuscarDatasEmString';
 import { verificarDataNoPeriodoDeDezesseisAnos } from '../../helps/VerificarDataNoPeriodoDosdezeseisAnos';
 import { converterDatasParaDate } from '../../helps/TransformarStringParaFormatoDate';
 import { getInformationDossieForPicaPau } from '../GetInformationDossie';
-
+import { readPDF } from '../GetPdfSislabra/teste1';
+import { downloadPDFWithCookies,  deletePDF } from '../GetPdfSislabra/GetPdfSislabra/GetPdfForPicaPau';
+import { verificarArraySislabra } from '../GetPdfSislabra/GetRegraSislabra/EmpregoSislabra';
+import { impeditivoVeiculo } from '../GetPdfSislabra/GetRegraSislabra/VeículoSislabra';
+import { enderecosEncontrados } from '../GetPdfSislabra/GetRegraSislabra/enderecoEncontrado';
+import { doacoesEleitorais } from '../GetPdfSislabra/GetRegraSislabra/DoacoesEleitoraisSislabra';
+import { imoveisSp } from '../GetPdfSislabra/GetRegraSislabra/imoveisSaopaulo';
 
 export class GetInformationFromSapienForSamirUseCase {
 
@@ -67,15 +72,25 @@ export class GetInformationFromSapienForSamirUseCase {
 
 
 
-                
+                const arrayDosIDParaBuscarpdf: Array<number> = [];
+                const arrayIdSislabra:Array<any> = [];
+                const paginaCapaFormatada = new JSDOM(await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie))
 
-                var objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
+                /* const arraySislabraAutor: Array<number> = []; */
+                let objectDosPrev: any = "";
+                var procurarDossies = arrayDeDocumentos.filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
+                //console.log(objectDosPrev2[0].documentoJuntado.componentesDigitais[0].id)
 
-                var objectDosPrevNaoExisti = objectDosPrev == null;
+
+
+
+
+
+                var objectDosPrevNaoExisti = procurarDossies[0] == null;
                 if (objectDosPrevNaoExisti) {
                     arrayDeDocumentos = await coletarArvoreDeDocumentoDoPassivo(objectGetArvoreDocumento)
-                    objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
-                    objectDosPrevNaoExisti = objectDosPrev == null;
+                    procurarDossies[0] = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
+                    objectDosPrevNaoExisti =procurarDossies[0] == null;
                     if (objectDosPrevNaoExisti) {
                         console.log("DOSPREV NÃO ECONTRADO");
                         (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ECONTRADO", tarefaId }))
@@ -84,44 +99,281 @@ export class GetInformationFromSapienForSamirUseCase {
                 }
 
 
-                    
-                
-
-                
 
 
-
-
-
-                const dosPrevSemIdParaPesquisa = (objectDosPrev.documentoJuntado.componentesDigitais.length) <= 0;
+                const dosPrevSemIdParaPesquisa = (procurarDossies[0].documentoJuntado.componentesDigitais.length) <= 0;
                 if (dosPrevSemIdParaPesquisa) {
                     console.log("DOSPREV COM FALHA NA PESQUISA");
                     (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV COM FALHA NA PESQUISA", tarefaId }))
                     continue;
                 }
-                const idDosprevParaPesquisa = objectDosPrev.documentoJuntado.componentesDigitais[0].id;
-                const parginaDosPrev = await getDocumentoUseCase.execute({ cookie, idDocument: idDosprevParaPesquisa });
+                let idDosprevParaPesquisaId: any = procurarDossies[0].documentoJuntado.componentesDigitais[0].id;
+                let parginaDosPrevParaId = await getDocumentoUseCase.execute({ cookie, idDocument: idDosprevParaPesquisaId });
+
+                let parginaDosPrevFormatadaParaId = new JSDOM(parginaDosPrevParaId);
 
 
-                const parginaDosPrevFormatada = new JSDOM(parginaDosPrev);
 
+
+                let idDosprevParaPesquisa: any = "";
+                let parginaDosPrev: any = "";
+                let parginaDosPrevFormatada:any = "";
+
+                //Buscar o Cpf na capa
+                let idProcurarPoloAtivo: number = 1; 
+                let whileVerificar = true;
+                let CpfAutor = "";
+                while(whileVerificar){
+                    const tabelasProcurarAtivo = getXPathText(paginaCapaFormatada, `html/body/div/div[6]/table/tbody/tr[${idProcurarPoloAtivo}]`)
+                    const regex = /\s{3}/;
+                    const tabelasProcurarAtivoSemEspaco = tabelasProcurarAtivo.replace(regex, ",");
+                    //console.log(tabelasProcurarAtivoSemEspaco);
+                    if( tabelasProcurarAtivoSemEspaco.indexOf("REQUERENTE (PÓLO ATIVO)") != -1){
+                        //console.log(tabelasProcurarAtivoSemEspaco)
+                        whileVerificar = false;
+                        const indiceAbertura = tabelasProcurarAtivoSemEspaco.indexOf("("); // encontra o índice da primeira ocorrência do parêntese aberto
+                        const indiceFechamento = tabelasProcurarAtivoSemEspaco.indexOf(")"); // encontra o índice da primeira ocorrência do parêntese fechado
+                        if (indiceAbertura !== -1 && indiceFechamento !== -1 && indiceAbertura < indiceFechamento) {
+                            const conteudoEntreParenteses = tabelasProcurarAtivoSemEspaco.substring(indiceAbertura + 1, indiceFechamento); // extrai o conteúdo entre os parênteses
+                            const numerosSemPontos = conteudoEntreParenteses.replace(/\.|-/g, "");
+                            /* console.log(numerosSemPontos)
+                            console.log("PASSOU AQUI 1 VEZES") */
+                            CpfAutor = numerosSemPontos;
+                            
+                          }
+                    }
+                    idProcurarPoloAtivo++;
+                }
+                //
+
+                let IdDosErroCatch: any = ""
+                const xpatgCpfAutor = '/html/body/div/div[1]/table/tbody/tr[7]/td';
+                const verificarCpfParaEntrarNoIf = getXPathText(parginaDosPrevFormatadaParaId, xpatgCpfAutor)
+
+                if(verificarCpfParaEntrarNoIf != CpfAutor){
+                    //console.log('entrou')
+                    try{
+                    
+                        for(let j=0; j<procurarDossies.length; j++){
+                            IdDosErroCatch = procurarDossies[j];
+                            let idDos = procurarDossies[j].documentoJuntado.componentesDigitais[0].id;
+                            let novoObjetoDos =  procurarDossies[j];
+                            let parginaDosPrevParaverificar = await getDocumentoUseCase.execute({ cookie, idDocument: idDos });
+                            let parginaDosPrevFormatadaVerificar = new JSDOM(parginaDosPrevParaverificar);
+                            let verificarCpf = getXPathText(parginaDosPrevFormatadaVerificar, xpatgCpfAutor)
+                            if(verificarCpf == CpfAutor){
+                                console.log("Entrou")
+                                objectDosPrev = novoObjetoDos;
+                                idDosprevParaPesquisa = objectDosPrev.documentoJuntado.componentesDigitais[0].id;
+                                parginaDosPrev = await getDocumentoUseCase.execute({ cookie, idDocument: idDosprevParaPesquisa });
+                                parginaDosPrevFormatada = new JSDOM(parginaDosPrev);                                      
+                                break;
+                            }
+                            
+                        }
+                        
+                    }catch{
+                            var objectDosPrevNaoExisti = IdDosErroCatch == null;
+                        if (objectDosPrevNaoExisti) {
+                            arrayDeDocumentos = await coletarArvoreDeDocumentoDoPassivo(objectGetArvoreDocumento)
+                            IdDosErroCatch = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
+                            objectDosPrevNaoExisti =IdDosErroCatch == null;
+                            if (objectDosPrevNaoExisti) {
+                                console.log("DOSPREV NÃO ECONTRADO");
+                                (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ECONTRADO", tarefaId }))
+                                continue;
+                            }
+                        }
+    
+    
+    
+    
+                        const dosPrevSemIdParaPesquisa = (IdDosErroCatch.documentoJuntado.componentesDigitais.length) <= 0;
+                        if (dosPrevSemIdParaPesquisa) {
+                            console.log("DOSPREV COM FALHA NA PESQUISA");
+                            (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV COM FALHA NA PESQUISA", tarefaId }))
+                            continue;
+                        }
+
+                        objectDosPrev = IdDosErroCatch;
+                        idDosprevParaPesquisa = objectDosPrev.documentoJuntado.componentesDigitais[0].id;
+                        parginaDosPrev = await getDocumentoUseCase.execute({ cookie, idDocument: idDosprevParaPesquisa });
+
+                        parginaDosPrevFormatada = new JSDOM(parginaDosPrev);
+                    }
+                }else{
+                    //console.log('entrou')
+                     objectDosPrev = procurarDossies[0];
+                     idDosprevParaPesquisa = objectDosPrev.documentoJuntado.componentesDigitais[0].id;
+                     parginaDosPrev = await getDocumentoUseCase.execute({ cookie, idDocument: idDosprevParaPesquisa });
+
+                     parginaDosPrevFormatada = new JSDOM(parginaDosPrev);
+                }
+    
+                //console.log(objectDosPrev.documentoJuntado.componentesDigitais[0].id)
+                
+                
+                
+                var objDosis: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - ANEXADO" && Documento.documentoJuntado.tipoDocumento.sigla == "PESBEN");
+                var objDosis2: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - AUTOR");
+                var objDosis3: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - POSSÍVEL CÔNJUGE OU COMPANHEIRO");
+                
+                
+                /* const idParaBuscarIdSislabra1: number = objDosis[0].documentoJuntado.componentesDigitais[0].id;
+                const idParaBuscarIdSislabra2: number = objDosis[1].documentoJuntado.componentesDigitais[0].id; */
+                
+
+                arrayIdSislabra.push(...objDosis, ...objDosis2, ...objDosis3);
+
+                if(arrayIdSislabra.length <= 0){
+                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "SISLABRA NÃO ENCONTRADO", tarefaId }))
+                        continue;
+                }
+                /* console.log(arrayIdSislabra)
+                console.log("Juntada documento - anexADO:" + objDosis)
+                console.log("JUNTADA DE DOCUMENTO - SISLABRA - AUTOR" + objDosis2)
+                console.log(arrayIdSislabra.length) */
+                
+                if(arrayIdSislabra.length>2){
+                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "FALHA AO EXAMINAR SISLABRA", tarefaId }))
+                        continue;
+                }
+
+                if(arrayIdSislabra.length==1){
+                     const idParaBuscarIdSislabra1 = arrayIdSislabra[0].documentoJuntado.componentesDigitais[0].id;
+                     arrayDosIDParaBuscarpdf.push(idParaBuscarIdSislabra1);
+                }else{
+                     const idParaBuscarIdSislabra1= arrayIdSislabra[0].documentoJuntado.componentesDigitais[0].id;
+                     const idParaBuscarIdSislabra2 = arrayIdSislabra[1].documentoJuntado.componentesDigitais[0].id;
+                     arrayDosIDParaBuscarpdf.push(idParaBuscarIdSislabra1, idParaBuscarIdSislabra2);
+                }
+                //console.log(arrayDosIDParaBuscarpdf);
+                
                 
 
 
 
+            
+             
+                
+                
+                
+                
+                console.log(CpfAutor)
+                const xpatgCpfAutorFormatado = getXPathText(parginaDosPrevFormatada, xpatgCpfAutor);
+                const pathNomeAutor = '/html/body/div/div[1]/table/tbody/tr[6]/td';
+                const pathNomeAutorFormatado = getXPathText(parginaDosPrevFormatada, pathNomeAutor); 
+                
+                //console.log(pathNomeAutorFormatado)
+                var VerificarAutorMaisDeUmaAutorEmpresa: number = 0;
+                var VerificarAutorMaisDeUmaConjugeEmpresa: number = 0;
+                var VerificarAutorMaisDeUmaAutorVeiculo: number = 0;
+                var VerificarAutorMaisDeUmaConjugeVeiculo: number = 0;
+                var VerificarAutorMaisDeUmaAutorEndereco: number = 0;
+                var VerificarAutorMaisDeUmaConjugeEndereco: number = 0;
+                var VerificarAutorMaisDeUmaAutorDoacoes: number = 0;
+                var VerificarAutorMaisDeUmaConjugeDoacoes : number = 0;
+                var VerificarAutorMaisDeUmaAutorImoveis: number = 0;
+                var VerificarAutorMaisDeUmaConjugeImoveis : number = 0;
+
+                    for(let i=0; i<arrayDosIDParaBuscarpdf.length; i++){
+                        //console.log(`https://sapiens.agu.gov.br/documento/${arrayDosIDParaBuscarpdf[i]}`)
+                        await downloadPDFWithCookies(`https://sapiens.agu.gov.br/documento/${arrayDosIDParaBuscarpdf[i]}`,cookie)
+                        .then(() => console.log('PDF downloaded successfully!'))
+                        .catch((error) => console.error('Error downloading PDF:', error));
+                        console.log("Entrou aqui")
+                        try{
+                            console.log("aqui")
+                        const pdf = await readPDF('resources/app/build/modules/GetPdfSislabra/GetPdfSislabra/sislabra.pdf')
+                        
+                        //console.log(VerificarAutorMaisDeUmaAutor)
+
+                            //VERIFICAÇÃO IMPEDITIVO EMPRESA
+                            const impedEmprego: Array<boolean> = verificarArraySislabra(pdf, CpfAutor);
+                            if(impedEmprego.length >= 2 && VerificarAutorMaisDeUmaAutorEmpresa < 1){
+                                VerificarAutorMaisDeUmaAutorEmpresa++;
+                                responseForPicaPau.push("Empresa autor")
+                            }else if(impedEmprego[0] == true && VerificarAutorMaisDeUmaConjugeEmpresa < 1 && impedEmprego.length < 2){
+                                VerificarAutorMaisDeUmaConjugeEmpresa++;
+                                responseForPicaPau.push("Empresa cônjuge")
+                            }else{
+                                console.log("Não tem impeditivo empresa")
+                            }
+
+
+                            //VERIFICAÇÃO IMPEDITIVO VEÍCULO
+                            const impeditivoVeiculoBolean: Array<any> = impeditivoVeiculo(pdf, CpfAutor);
+                            console.log("AQUI NO FOR " +impeditivoVeiculoBolean)
+                            if(impeditivoVeiculoBolean.length > 1 && VerificarAutorMaisDeUmaAutorVeiculo < 1){
+                                console.log("VEICULO AUTOR")
+                                console.log(impeditivoVeiculoBolean.length)
+                                VerificarAutorMaisDeUmaAutorVeiculo++
+                                responseForPicaPau.push("VEICULO AUTOR")
+                            }else if(impeditivoVeiculoBolean.length == 1 && impeditivoVeiculoBolean[0] == true && VerificarAutorMaisDeUmaConjugeVeiculo < 1){
+                                console.log("VEICULO cônjuge")
+                                VerificarAutorMaisDeUmaConjugeVeiculo++;
+                                responseForPicaPau.push("VEICULO cônjuge")
+                            }
+
+
+                            //VERIFICAÇÃO IMPEDITIVO ENDERECO
+                            const enderecosBolean:Array<boolean> = enderecosEncontrados(pdf, CpfAutor);
+                            if(enderecosBolean.length > 1 && VerificarAutorMaisDeUmaAutorEndereco < 1){
+                                VerificarAutorMaisDeUmaAutorEndereco++;
+                                responseForPicaPau.push(" Cidade Autor")
+                            }else if(enderecosBolean.length == 1 && VerificarAutorMaisDeUmaConjugeEndereco < 1){
+                                VerificarAutorMaisDeUmaConjugeEndereco++;
+                                responseForPicaPau.push("cidade Cônjuge")
+                            }
+
+
+                            //VERIFICAR DOAÇOES ELEITORAIS
+                            const doacoesSislabra = doacoesEleitorais(pdf, CpfAutor);
+                            if(doacoesSislabra.length > 1 && VerificarAutorMaisDeUmaAutorDoacoes < 1){
+                                VerificarAutorMaisDeUmaAutorDoacoes++
+                                responseForPicaPau.push(" Doações Eleitorais Autor")
+                            }else if(doacoesSislabra.length == 1 && VerificarAutorMaisDeUmaConjugeDoacoes < 1){
+                                VerificarAutorMaisDeUmaConjugeDoacoes++
+                                responseForPicaPau.push(" Doações Eleitorais Cônjuge")
+                            }
+                            
+
+                            const imoveisSP = imoveisSp(pdf, CpfAutor); 
+                            if(imoveisSP.length > 1 && VerificarAutorMaisDeUmaAutorImoveis < 1){
+                                VerificarAutorMaisDeUmaAutorImoveis++
+                                responseForPicaPau.push("Imoveis SP Autor")
+                            }else if(imoveisSP.length == 1 && VerificarAutorMaisDeUmaConjugeImoveis < 1){
+                                VerificarAutorMaisDeUmaConjugeImoveis++
+                                responseForPicaPau.push(" Imoveis SP Cônjuge")
+                            }
 
 
 
 
 
+                        deletePDF('sislabra.pdf');
+                        }catch{
+                            (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "ERRO AO EXAMINAR SISLABRA", tarefaId }))
+                            continue;
+                        }
+                    }
+                    console.log(responseForPicaPau)
                     
+                
+                
+                
+
+
+                
+               
+                  
                    /*  const procurarAdvogadoPilantraCapa: boolean = IdentificarAdvogadoPilantra((await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie)));
                     if(!procurarAdvogadoPilantraCapa){
                         response2.push("IMPEDITIVO ADVOGADO");
-                    } */
-
-
-
+                    }
+                    
+                    
+                    
                     
 
 
@@ -216,8 +468,7 @@ export class GetInformationFromSapienForSamirUseCase {
 
                 
                 
-
-
+                   /*  deletePDF('sislabra.pdf') */
                      //Verificar litispedência                                                       
                     /* const xpathRelacaoProcesso = "/html/body/div/div[2]/table/tbody/tr[2]/td";                   
                     const xpathRelacaoProcessoFormatada: string = (getXPathText(parginaDosPrevFormatada, xpathRelacaoProcesso).trim());
@@ -244,7 +495,7 @@ export class GetInformationFromSapienForSamirUseCase {
  
 
 
-                const xpathInformacaoDeCabeçalho = "/html/body/div/p[2]/b[1]"
+                /* const xpathInformacaoDeCabeçalho = "/html/body/div/p[2]/b[1]"
                 const informacaoDeCabeçalho = getXPathText(parginaDosPrevFormatada, xpathInformacaoDeCabeçalho);
                 //console.log("informacaoDeCabeçalho", informacaoDeCabeçalho)
                 const informacaoDeCabeçalhoNaoExiste = !informacaoDeCabeçalho;
@@ -259,13 +510,20 @@ export class GetInformationFromSapienForSamirUseCase {
                     console.log("DOSPREV INVALIDO");
                     (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV INVALIDO", tarefaId }))
                     continue
-                }
+                } */
 
 
-
-
-
+                
+               
                     let impedCapa: Array<String> = await impedimentosCapa.Impedimentos(await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie));
+                    responseForPicaPau.push(...impedCapa);
+                   
+
+                    let impedDossie: Array<string> = await getInformationDossieForPicaPau.impedimentos(parginaDosPrevFormatada, parginaDosPrev);
+                    responseForPicaPau.push(...impedDossie) 
+                
+
+                    /* let impedCapa: Array<String> = await impedimentosCapa.Impedimentos(await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie));
                     responseForPicaPau.push(...impedCapa);
                     
 

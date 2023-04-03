@@ -4,7 +4,7 @@ exports.DatasRequerimento = void 0;
 const GetTextoPorXPATH_1 = require("../../../helps/GetTextoPorXPATH");
 const FiltrarDatas_1 = require("../../../helps/FiltrarDatas");
 const VerificarDataMaisAtual_1 = require("../../../helps/VerificarDataMaisAtual");
-const subtrairanoAtual_1 = require("../../../helps/subtrairanoAtual");
+const subtrairAnoAtual_1 = require("../../../helps/subtrairAnoAtual");
 class DatasRequerimento {
     async dataRequerimento(parginaDosPrevFormatada) {
         let tamanhoColunasRequerimentos = 2;
@@ -28,7 +28,7 @@ class DatasRequerimento {
             }
         }
         const dataAtual = (0, VerificarDataMaisAtual_1.encontrarDataMaisAtual)(arrayDatas);
-        const dataMenosdezesseis = (0, subtrairanoAtual_1.SubtrairAnoMaisAtual)(dataAtual, -16);
+        const dataMenosdezesseis = (0, subtrairAnoAtual_1.SubtrairAnoMaisAtual)(dataAtual, -16);
         return [dataAtual, dataMenosdezesseis];
     }
 }

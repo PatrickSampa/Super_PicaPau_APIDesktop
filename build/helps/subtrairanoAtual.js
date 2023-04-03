@@ -7,4 +7,4 @@ function SubtrairAnoMaisAtual(dataMaisAtual, anos) {
     return data;
 }
 exports.SubtrairAnoMaisAtual = SubtrairAnoMaisAtual;
-//# sourceMappingURL=subtrairanoAtual.js.map
+//# sourceMappingURL=subtrairAnoAtual.js.map

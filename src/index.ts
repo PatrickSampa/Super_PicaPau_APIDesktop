@@ -1,6 +1,7 @@
 import {app, ipcMain, BrowserWindow, Menu} from "electron";
 import { expr } from "./app";
 import { exec } from 'child_process';
+import {randomIntFromInterval} from './teste'
 
 
 
@@ -10,7 +11,7 @@ let mainWindow : BrowserWindow;
 
 app.on("ready", createWindows);
 
-function createWindows (): void {
+export function createWindows (): void{
     mainWindow = new BrowserWindow({
         
         width: 900, height: 600,
@@ -35,13 +36,13 @@ function createWindows (): void {
           return;
         }
       });
-
+    const port = randomIntFromInterval(1,30000);
     expr.get('/', (req, res) => res.send('Hello World 100!'))
 
-    expr.listen( 3000, () => console.log("Visao runing in PORT " +  3000));
+    expr.listen(3000, () => console.log("Visao runing in PORT " +   3000));
 
 
     mainWindow.loadFile("./index.html");
     mainWindow.on("ready-to-show", () => mainWindow.show())
-    
+
 }
