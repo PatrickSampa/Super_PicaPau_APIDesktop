@@ -14,7 +14,7 @@ app.on("ready", createWindows);
 export function createWindows (): void{
     mainWindow = new BrowserWindow({
         
-        width: 900, height: 600,
+        width: 1000, height: 700,
         webPreferences: {
         },
         show: false

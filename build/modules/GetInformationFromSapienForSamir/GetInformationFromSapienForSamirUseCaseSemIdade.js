@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetInformationFromSapienForSamirUseCase = void 0;
+exports.GetInformationFromSapienForSamirUseCaseSemIdade = void 0;
 const { JSDOM } = require('jsdom');
 const GetUsuario_1 = require("../GetUsuario");
 const LoginUsuario_1 = require("../LoginUsuario");
@@ -20,7 +20,7 @@ const Ve_culoSislabra_1 = require("../GetPdfSislabra/GetRegraSislabra/Ve\u00EDcu
 const enderecoEncontrado_1 = require("../GetPdfSislabra/GetRegraSislabra/enderecoEncontrado");
 const DoacoesEleitoraisSislabra_1 = require("../GetPdfSislabra/GetRegraSislabra/DoacoesEleitoraisSislabra");
 const imoveisSaopaulo_1 = require("../GetPdfSislabra/GetRegraSislabra/imoveisSaopaulo");
-class GetInformationFromSapienForSamirUseCase {
+class GetInformationFromSapienForSamirUseCaseSemIdade {
     async execute(data) {
         const cookie = await LoginUsuario_1.loginUseCase.execute(data.login);
         const usuario = (await GetUsuario_1.getUsuarioUseCase.execute(cookie));
@@ -246,7 +246,7 @@ class GetInformationFromSapienForSamirUseCase {
                 console.log(responseForPicaPau);
                 let impedCapa = await GetInformationCapa_1.impedimentosCapa.Impedimentos(await GetCapaDoPassiva_1.getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie));
                 responseForPicaPau.push(...impedCapa);
-                let impedDossie = await GetInformationDossie_1.getInformationDossieForPicaPau.impedimentos(parginaDosPrevFormatada, parginaDosPrev);
+                let impedDossie = await GetInformationDossie_1.getInformationDossieForPicaPauSemIdade.impedimentos(parginaDosPrevFormatada, parginaDosPrev);
                 responseForPicaPau.push(...impedDossie);
                 if (responseForPicaPau.length == 0) {
                     await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "PROCESSO LIMPOO", tarefaId });
@@ -277,5 +277,5 @@ class GetInformationFromSapienForSamirUseCase {
         }
     }
 }
-exports.GetInformationFromSapienForSamirUseCase = GetInformationFromSapienForSamirUseCase;
-//# sourceMappingURL=GetInformationFromSapienForSamirUseCase.js.map
+exports.GetInformationFromSapienForSamirUseCaseSemIdade = GetInformationFromSapienForSamirUseCaseSemIdade;
+//# sourceMappingURL=GetInformationFromSapienForSamirUseCaseSemIdade.js.map

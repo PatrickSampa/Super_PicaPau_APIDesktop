@@ -30,7 +30,7 @@ import { encontrarDataMaisAtual } from '../../helps/VerificarDataMaisAtual';
 import { ordenarDatas } from '../../helps/BuscarDatasEmString';
 import { verificarDataNoPeriodoDeDezesseisAnos } from '../../helps/VerificarDataNoPeriodoDosdezeseisAnos';
 import { converterDatasParaDate } from '../../helps/TransformarStringParaFormatoDate';
-import { getInformationDossieForPicaPau } from '../GetInformationDossie';
+import { getInformationDossieForPicaPauSemIdade } from '../GetInformationDossie';
 import { readPDF } from '../GetPdfSislabra/teste1';
 import { downloadPDFWithCookies,  deletePDF } from '../GetPdfSislabra/GetPdfSislabra/GetPdfForPicaPau';
 import { verificarArraySislabra } from '../GetPdfSislabra/GetRegraSislabra/EmpregoSislabra';
@@ -39,7 +39,7 @@ import { enderecosEncontrados } from '../GetPdfSislabra/GetRegraSislabra/enderec
 import { doacoesEleitorais } from '../GetPdfSislabra/GetRegraSislabra/DoacoesEleitoraisSislabra';
 import { imoveisSp } from '../GetPdfSislabra/GetRegraSislabra/imoveisSaopaulo';
 
-export class GetInformationFromSapienForSamirUseCase {
+export class GetInformationFromSapienForSamirUseCaseSemIdade {
 
     async execute(data: IGetInformationsFromSapiensDTO): Promise<any> {
         // console.log("teste")
@@ -521,7 +521,7 @@ export class GetInformationFromSapienForSamirUseCase {
                     responseForPicaPau.push(...impedCapa);
                    
 
-                    let impedDossie: Array<string> = await getInformationDossieForPicaPau.impedimentos(parginaDosPrevFormatada, parginaDosPrev);
+                    let impedDossie: Array<string> = await getInformationDossieForPicaPauSemIdade.impedimentos(parginaDosPrevFormatada, parginaDosPrev);
                     responseForPicaPau.push(...impedDossie) 
                 
 

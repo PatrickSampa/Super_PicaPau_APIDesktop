@@ -9,7 +9,7 @@ let mainWindow;
 electron_1.app.on("ready", createWindows);
 function createWindows() {
     mainWindow = new electron_1.BrowserWindow({
-        width: 900, height: 600,
+        width: 1000, height: 700,
         webPreferences: {},
         show: false
     });

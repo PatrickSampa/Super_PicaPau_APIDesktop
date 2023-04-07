@@ -1,7 +1,13 @@
 import { GetInformationFromSapienForSamirController } from './GetInformationFromSapienForSamirController';
 import { GetInformationFromSapienForSamirUseCase } from './GetInformationFromSapienForSamirUseCase';
+import { GetInformationFromSapienForSamirControllerSemIdade } from './GetInformationFromSapienForSamirControllerSemIdade';
+import { GetInformationFromSapienForSamirUseCaseSemIdade } from './GetInformationFromSapienForSamirUseCaseSemIdade';
 
 const getInformationFromSapienForSamirUseCase = new GetInformationFromSapienForSamirUseCase();
 const getInformationFromSapienForSamirController = new GetInformationFromSapienForSamirController(getInformationFromSapienForSamirUseCase);
 
-export {getInformationFromSapienForSamirUseCase, getInformationFromSapienForSamirController };
+
+const getInformationFromSapienForSamirUseCaseSemIdade = new GetInformationFromSapienForSamirUseCaseSemIdade();
+const getInformationFromSapienForSamirControllerSemIdade = new GetInformationFromSapienForSamirControllerSemIdade(getInformationFromSapienForSamirUseCaseSemIdade);
+
+export {getInformationFromSapienForSamirUseCase, getInformationFromSapienForSamirController, getInformationFromSapienForSamirUseCaseSemIdade, getInformationFromSapienForSamirControllerSemIdade };

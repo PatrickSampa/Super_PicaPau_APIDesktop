@@ -1,1 +1,1 @@
-{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../src/modules/GetInformationDossie/index.ts"],"names":[],"mappings":";;;AAAA,6FAAsF;AAEzE,QAAA,8BAA8B,GAAG,IAAI,mEAA8B,EAAE,CAAC"}
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../src/modules/GetInformationDossie/index.ts"],"names":[],"mappings":";;;AAAA,6FAAsF;AACtF,6GAAsG;AAEzF,QAAA,8BAA8B,GAAG,IAAI,mEAA8B,EAAE,CAAC;AACtE,QAAA,sCAAsC,GAAG,IAAI,mFAAsC,EAAE,CAAC"}

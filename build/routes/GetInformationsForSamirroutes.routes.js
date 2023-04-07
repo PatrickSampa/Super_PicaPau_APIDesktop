@@ -7,6 +7,9 @@ exports.routerGetInformationsForPicaPau = (0, express_1.Router)();
 exports.routerGetInformationsForPicaPau.post("/getInformationFromSapienForSamir", async (req, res) => {
     return GetInformationFromSapienForSamir_1.getInformationFromSapienForSamirController.handle(req, res);
 });
+exports.routerGetInformationsForPicaPau.post("/getInformationFromSapienForSamirSemIdade", async (req, res) => {
+    return GetInformationFromSapienForSamir_1.getInformationFromSapienForSamirControllerSemIdade.handle(req, res);
+});
 exports.routerGetInformationsForPicaPau.post("/getInformationFromSapiesForPicaPau", async (req, res) => {
     return GetInformationFromSapienForSamir_1.getInformationFromSapienForSamirController.handle(req, res);
 });
