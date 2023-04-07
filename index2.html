@@ -214,7 +214,7 @@ h3{
     border: none;
     border-radius: 4px;
     padding: 7px 15px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   
@@ -233,36 +233,20 @@ h3{
 } */
 
 .popup{
-  width: 300px;
-  height: 250px;
+  width: 350px;
+  height: 350px;
   background-color: #243b55;
   border-radius: 6px;
   position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.1);
-  text-align: center;
-  padding: 0 30px 30px;
-  color: #333;
-  visibility: hidden;
+  top: 32%;
   transition: transform 0.4s, top 0.4s;
-}
-
-.u{
-  width: 300px;
-  height: 250px;
-  background-color: #243b55;
-  border-radius: 6px;
-
-
-  left: 50%;
- 
   text-align: center;
   padding: 0 30px 30px;
   color: #333;
   
-  
 }
+
+
 
 .popup img{
   width: 100px;
@@ -286,11 +270,7 @@ h3{
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
 }
 
-.open-popup{
-  visibility: visible;
-  top: 40%;
-  transform: translate(-50%, -50%) scale(1);
-}
+
 .teste{
   visibility: hidden;
 }
@@ -301,9 +281,9 @@ h3{
   color: red;
   
 }
-.conf{
+/* .conf{
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+} */
 
 .btn {
   background-color: #ffffff;
@@ -315,11 +295,6 @@ h3{
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-.m{
-  display: inline-block; /* exibe os elementos em linha */
-  width: 50%; /* define a largura para 50% para exibir lado a lado */
-}
-
   </style>
 </head>
 
@@ -328,20 +303,21 @@ h3{
   
   <div class="container">
     
+   
     <div class="popup" id="popup">
       <img src="picapauimg.jpg" alt="" width="150px" height="150px">
-      <p class="msg" id="msg">Confirmar Mudanca para salário maternidade?</p>
-      <button type="button" onclick="closePopup()" id="conf" class="conf">Confirmar</button>
-      <a href="index3.html" id="teste" class="teste"></a>
+      <p class="msg" id="msg">Informe o tipo de triagem que você deseja fazer</p>
+      <button type="button" onclick="rural()" id="conf" class="conf" style="color: hsl(212, 83%, 12%); border: none; font-size: 1.2rem; padding: 0.5rem 1.2rem; border-radius: 0.5rem; box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2); background-color: #ce0b0b; cursor: pointer; font-weight: 800; width: 250px">Aposentadoria Rural</button>
+      <br>
+      <button type="button" class="btn" onclick="maternidade()" id="btn" style="color:hsl(212, 83%, 12%); border: none; font-size: 1.2rem; padding: 0.5rem 1.2rem; border-radius: 0.5rem; box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2); background-color: #ce0b0b; cursor: pointer; font-weight: 800; width: 250px;" >Salário Maternidade</button>
+      <a href="index.html" id="r" class="r"></a>
+      <a href="index3.html" id="b" class="b"></a>
     </div>
-    
     <h2>Pica-Pau</h2>
     <form id="form" method="post">
       <input type="text" id="CPFSapiens" name="CPF" class="input" placeholder="CPF">
       <input type="password" id="passwordSapiens" name="password" class="input" placeholder="Senha">
       <input type="text" id="EtiquetaSapiens" name="etiquetaName" class="input" placeholder="Etiqueta">
-      
-      <br>
       <h3 id="erro"></h3>
       <br></br>
       <div class="button-container">
@@ -349,24 +325,17 @@ h3{
         <div></div>
         <div></div>
         <div></div>
-        <button type="submit" id="triagem" class="triagem">Iniciar Triagem</button>
+        <!-- <button type="submit" id="triagem" class="triagem">Iniciar Triagem</button> -->
       </div>
     </form>
     <br>
     <br>
-    
-    <p style="cursor: pointer; font-weight: 600; text-align: center;"><span style="color: green; box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2); ">&#x2714;</span> Lendo aposentadoria Rural</p>
-      <br>
-      <button type="button" class="btn" onclick="openPopup()" id="btn" style="color: #051b35; border: none; font-size: 1.2rem; padding: 0.5rem 1.2rem; border-radius: 0.5rem; box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2); background-color: #ce0b0b; cursor: pointer; font-weight: 600">Mudar Para salário Maternidade</button>
- 
-    
-    
-    <!-- <div id="u" class="u">
+    <div id="u" class="u">
       <button type="button" class="btn" onclick="openPopup()" id="btn" style="color: #243b55; border: none; font-size: 1.2rem; padding: 0.5rem 1.2rem; border-radius: 0.5rem; box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2); background-color: #ce0b0b; cursor: pointer; font-weight: 600">Aposentadoria Rural</button>
       <br>
       <br>
-      <button type="button" class="btn" onclick="openPopup()" id="btn" style="color: #243b55; border: none; font-size: 1.2rem; padding: 0.5rem 1.2rem; border-radius: 0.5rem; box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2); background-color: #ce0b0b; cursor: pointer; font-weight: 600">Salário Maternidade</button>
-    </div> -->
+      <!-- <button type="button" class="btn" onclick="openPopup()" id="btn" style="color: #243b55; border: none; font-size: 1.2rem; padding: 0.5rem 1.2rem; border-radius: 0.5rem; box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2); background-color: #ce0b0b; cursor: pointer; font-weight: 600">Salário Maternidade</button> -->
+    </div>
   </div>
   
 
@@ -381,16 +350,14 @@ h3{
     let elem = cssElement1.parentNode;
     
     console.log(elem)
-    function openPopup(){
-      popup.classList.add("open-popup")
-      
-      
+    function rural(){
+        var link = document.getElementById("r");
+         link.click();
     }
-    function closePopup(){
-      var link = document.getElementById("teste");
-      link.click();
+    function maternidade(){
+        var link = document.getElementById("b");
+         link.click();
     }
-    
     const form = document.getElementById('form');
     const url = 'http://localhost:3000/samir/getInformationFromSapienForSamir'
     const cpf = document.getElementById('CPFSapiens');
@@ -409,6 +376,7 @@ h3{
       cssElement1.style.backgroundImage = "linear-gradient(to top, var(--color6), var(--color4))";
       /* elem.style.boxShadow = "0 0 1rem 0.5rem var(--color4)"; */
       await checkInputs();
+      teste();
     })
         
     async function checkInputs(){
@@ -427,8 +395,9 @@ h3{
         console.log(data.login.senha)
         console.log(data.etiqueta)
         document.getElementById('triagem').innerHTML = "Triando Processos..."
-        await axios.post(url, data).then( data => { document.getElementById('erro').innerHTML = "Fim da Triagem"}).catch(err => document.getElementById('erro').innerHTML = `Usuário Incorreto`)
-        document.getElementById('triagem').innerHTML = "Iniciar Triagem";
+        await axios.post(url, data).then( data => { document.getElementById('erro').innerHTML = "Fim da Triagem"
+        console.log("passou")}).catch(err => document.getElementById('erro').innerHTML = `Usuário Incorreto`);
+    
         cssElement4.classList.remove("testeee");
         cssElement4.style.backgroundImage = "";
         cssElement3.classList.remove("testeeee");
@@ -437,7 +406,10 @@ h3{
         cssElement2.style.backgroundImage = "";
         cssElement1.classList.remove("testeeeeee");
         cssElement1.style.backgroundImage = "";
+        document.getElementById('triagem').innerHTML = "Iniciar Triagem";
+        
     }
+    
     
    /*  form.addEventListener('submit', async function(e) {
       e.preventDefault();

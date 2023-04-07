@@ -14,7 +14,7 @@ app.on("ready", createWindows);
 export function createWindows (): void{
     mainWindow = new BrowserWindow({
         
-        width: 1000, height: 700,
+        width: 1100, height: 800,
         webPreferences: {
         },
         show: false
@@ -42,7 +42,7 @@ export function createWindows (): void{
     expr.listen(3000, () => console.log("Visao runing in PORT " +   3000));
 
 
-    mainWindow.loadFile("./index.html");
+    mainWindow.loadFile("./index2.html");
     mainWindow.on("ready-to-show", () => mainWindow.show())
 
 }

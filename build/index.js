@@ -9,7 +9,7 @@ let mainWindow;
 electron_1.app.on("ready", createWindows);
 function createWindows() {
     mainWindow = new electron_1.BrowserWindow({
-        width: 1000, height: 700,
+        width: 1100, height: 800,
         webPreferences: {},
         show: false
     });
@@ -22,7 +22,7 @@ function createWindows() {
     const port = (0, teste_1.randomIntFromInterval)(1, 30000);
     app_1.expr.get('/', (req, res) => res.send('Hello World 100!'));
     app_1.expr.listen(3000, () => console.log("Visao runing in PORT " + 3000));
-    mainWindow.loadFile("./index.html");
+    mainWindow.loadFile("./index2.html");
     mainWindow.on("ready-to-show", () => mainWindow.show());
 }
 exports.createWindows = createWindows;
