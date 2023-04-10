@@ -371,7 +371,7 @@ export class GetInformationFromSapienForSamirUseCase {
                   
                    /*  const procurarAdvogadoPilantraCapa: boolean = IdentificarAdvogadoPilantra((await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie)));
                     if(!procurarAdvogadoPilantraCapa){
-                        response2.push("IMPEDITIVO ADVOGADO");
+                        response2.push("IMPEDITIVO ADVOGADO"  );
                     }
                     
                     
