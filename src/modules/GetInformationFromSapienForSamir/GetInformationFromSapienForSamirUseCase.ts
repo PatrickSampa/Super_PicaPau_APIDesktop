@@ -218,12 +218,20 @@ export class GetInformationFromSapienForSamirUseCase {
                 var objDosis2: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - AUTOR");
                 var objDosis3: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - POSSÍVEL CÔNJUGE OU COMPANHEIRO");
                 
-                
+                if(objDosis[0] != undefined){
+                    arrayIdSislabra.push(objDosis[0]);
+                }
+                if(objDosis2[0] != undefined){
+                    arrayIdSislabra.push(objDosis2[0])
+                }
+                if(objDosis3[0] != undefined){
+                    arrayIdSislabra.push(objDosis3[0])
+                }
                 /* const idParaBuscarIdSislabra1: number = objDosis[0].documentoJuntado.componentesDigitais[0].id;
                 const idParaBuscarIdSislabra2: number = objDosis[1].documentoJuntado.componentesDigitais[0].id; */
                 
 
-                arrayIdSislabra.push(...objDosis, ...objDosis2, ...objDosis3);
+                /* arrayIdSislabra.push(...objDosis, ...objDosis2, ...objDosis3); */
 
                 if(arrayIdSislabra.length <= 0){
                     (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "SISLABRA NÃO ENCONTRADO", tarefaId }))

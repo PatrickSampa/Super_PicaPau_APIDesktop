@@ -144,7 +144,15 @@ class GetInformationFromSapienForSamirUseCase {
                 var objDosis = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - ANEXADO" && Documento.documentoJuntado.tipoDocumento.sigla == "PESBEN");
                 var objDosis2 = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - AUTOR");
                 var objDosis3 = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - POSSÍVEL CÔNJUGE OU COMPANHEIRO");
-                arrayIdSislabra.push(...objDosis, ...objDosis2, ...objDosis3);
+                if (objDosis[0] != undefined) {
+                    arrayIdSislabra.push(objDosis[0]);
+                }
+                if (objDosis2[0] != undefined) {
+                    arrayIdSislabra.push(objDosis2[0]);
+                }
+                if (objDosis3[0] != undefined) {
+                    arrayIdSislabra.push(objDosis3[0]);
+                }
                 if (arrayIdSislabra.length <= 0) {
                     (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "SISLABRA NÃO ENCONTRADO", tarefaId }));
                     continue;
