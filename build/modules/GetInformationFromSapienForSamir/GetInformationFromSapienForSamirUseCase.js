@@ -249,7 +249,7 @@ class GetInformationFromSapienForSamirUseCase {
                 let impedDossie = await GetInformationDossie_1.getInformationDossieForPicaPau.impedimentos(parginaDosPrevFormatada, parginaDosPrev);
                 responseForPicaPau.push(...impedDossie);
                 if (responseForPicaPau.length == 0) {
-                    await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "PROCESSO LIMPOO", tarefaId });
+                    await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "PROCESSO LIMPO", tarefaId });
                 }
                 else {
                     let etiquetaFinal = "";

@@ -567,7 +567,7 @@ export class GetInformationFromSapienForSamirUseCase {
 //console.log(response2)
                 
                 if(responseForPicaPau.length==0){
-                    await updateEtiquetaUseCase.execute({cookie, etiqueta: "PROCESSO LIMPOO", tarefaId});
+                    await updateEtiquetaUseCase.execute({cookie, etiqueta: "PROCESSO LIMPO", tarefaId});
                 }else{
                     let etiquetaFinal = "";
                     for(let j = 0; j<responseForPicaPau.length; j++){
