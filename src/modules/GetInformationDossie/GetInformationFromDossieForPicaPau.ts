@@ -13,7 +13,7 @@ export class GetInformationDossieForPicaPau{
         const DatasAtualEMenosDezesseis: Array<Date> = await requerimentos.dataRequerimento(paginaDosprevFormatada);
         console.log("Data Requerimento: " + DatasAtualEMenosDezesseis.length); 
         if(DatasAtualEMenosDezesseis[0] == null){
-            ArrayImpedimentos.push("IDADE SEM GÊNERO")
+            ArrayImpedimentos.push("AUSÊNCIA DE REQUERIMENTO")
         }else{
             const verificarDataFinal: boolean = await dataPrevidencias.Previdenciarias(DatasAtualEMenosDezesseis[0], DatasAtualEMenosDezesseis[1], paginaDosprevFormatada);
             if(verificarDataFinal){
