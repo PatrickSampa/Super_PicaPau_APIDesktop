@@ -12,6 +12,9 @@ class CalcularIdade {
         const dataNascFormatado = (0, Corre_aoDoErroDeFormatoDoSapiens_1.correçaoDoErroDeFormatoDoSapiens)((0, GetTextoPorXPATH_1.getXPathText)(parginaDosPrevFormatada, dataNascXpath));
         const generoFormatado = (0, Corre_aoDoErroDeFormatoDoSapiens_1.correçaoDoErroDeFormatoDoSapiens)((0, GetTextoPorXPATH_1.getXPathText)(parginaDosPrevFormatada, generoXptah));
         ;
+        if (generoFormatado.length == 0) {
+            return [];
+        }
         let dataAjuizArray = dataAjuizFormatado.split("/");
         let year = parseFloat(dataAjuizArray[2]);
         let month = parseFloat(dataAjuizArray[1]);
@@ -22,12 +25,12 @@ class CalcularIdade {
         }
         const idade = quantos_anos < 0 ? 0 : quantos_anos;
         if (generoFormatado === "MASCULINO" && idade >= 60) {
-            return true;
+            return [true];
         }
         if (generoFormatado === "FEMININO" && idade >= 55) {
-            return true;
+            return [true];
         }
-        return false;
+        return [false];
     }
 }
 exports.CalcularIdade = CalcularIdade;

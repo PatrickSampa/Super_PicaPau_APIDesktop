@@ -10,20 +10,29 @@ export class GetInformationDossieForPicaPau{
         const ArrayImpedimentos: Array<string> = [];
 
         try{
-            const DatasAtualEMenosDezesseis: Array<Date> = await requerimentos.dataRequerimento(paginaDosprevFormatada);
-        const verificarDataFinal: boolean = await dataPrevidencias.Previdenciarias(DatasAtualEMenosDezesseis[0], DatasAtualEMenosDezesseis[1], paginaDosprevFormatada);
-        if(verificarDataFinal){
-            ArrayImpedimentos.push("EMPREGO")
+        const DatasAtualEMenosDezesseis: Array<Date> = await requerimentos.dataRequerimento(paginaDosprevFormatada);
+        console.log("Data Requerimento: " + DatasAtualEMenosDezesseis.length); 
+        if(DatasAtualEMenosDezesseis[0] == null){
+            ArrayImpedimentos.push("IDADE SEM GÊNERO")
+        }else{
+            const verificarDataFinal: boolean = await dataPrevidencias.Previdenciarias(DatasAtualEMenosDezesseis[0], DatasAtualEMenosDezesseis[1], paginaDosprevFormatada);
+            if(verificarDataFinal){
+                ArrayImpedimentos.push("EMPREGO")
         }
+        }
+        
         }catch{
             ArrayImpedimentos.push("ERRO DOSPREV EMPREGO")
         }
         
 
-        const verificarIdade = await calcularIdade.calcIdade(paginaDosprevFormatada);
-        if(!verificarIdade){
+        const verificarIdade: Array<boolean> = await calcularIdade.calcIdade(paginaDosprevFormatada);
+        
+
+        if(!verificarIdade[0] && verificarIdade.length != 0){
             ArrayImpedimentos.push("IDADE")
-        } 
+        }
+        
 
 
         const verificarLitispedencia = await litispendencia.funcLitis(paginaDosprevFormatada);

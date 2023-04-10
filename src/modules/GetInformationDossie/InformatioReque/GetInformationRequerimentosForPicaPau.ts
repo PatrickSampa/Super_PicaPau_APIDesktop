@@ -30,6 +30,8 @@ export class DatasRequerimento{
             }
             const dataAtual = encontrarDataMaisAtual(arrayDatas);
             const dataMenosdezesseis = SubtrairAnoMaisAtual(dataAtual, -16);
+            console.log("Data Atual: " + dataAtual)
+            console.log("Data Menos 16: " + dataMenosdezesseis);
             return [dataAtual, dataMenosdezesseis]
     }
     

@@ -29,6 +29,8 @@ class DatasRequerimento {
         }
         const dataAtual = (0, VerificarDataMaisAtual_1.encontrarDataMaisAtual)(arrayDatas);
         const dataMenosdezesseis = (0, subtrairAnoAtual_1.SubtrairAnoMaisAtual)(dataAtual, -16);
+        console.log("Data Atual: " + dataAtual);
+        console.log("Data Menos 16: " + dataMenosdezesseis);
         return [dataAtual, dataMenosdezesseis];
     }
 }
