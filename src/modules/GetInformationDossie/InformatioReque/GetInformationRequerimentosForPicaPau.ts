@@ -17,7 +17,12 @@ export class DatasRequerimento{
             }
             tamanhoColunasRequerimentos++;
         }
-
+        //console.log("Tamanho Coluna: " + tamanhoColunasRequerimentos);
+        /* if(parginaDosPrev.indexOf("Não foram encontrados requerimentos em nome do autor.") != -1){
+            console.log("ENTROU AQUI")
+            return [];
+            
+        } */
             for(let t=2; t<tamanhoColunasRequerimentos; t++){
                 if(typeof (getXPathText(parginaDosPrevFormatada,`/html/body/div/div[3]/table/tbody/tr[${t}]`)) === 'string'){
                     const xpathColunaRequerimentos = `/html/body/div/div[3]/table/tbody/tr[${t}]`;

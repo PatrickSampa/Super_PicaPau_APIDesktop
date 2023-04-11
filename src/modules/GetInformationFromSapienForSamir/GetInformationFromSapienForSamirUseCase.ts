@@ -31,7 +31,7 @@ import { ordenarDatas } from '../../helps/BuscarDatasEmString';
 import { verificarDataNoPeriodoDeDezesseisAnos } from '../../helps/VerificarDataNoPeriodoDosdezeseisAnos';
 import { converterDatasParaDate } from '../../helps/TransformarStringParaFormatoDate';
 import { getInformationDossieForPicaPau } from '../GetInformationDossie';
-import { readPDF } from '../GetPdfSislabra/teste1';
+import { readPDF } from '../GetPdfSislabra/ReadPdf';
 import { downloadPDFWithCookies,  deletePDF } from '../GetPdfSislabra/GetPdfSislabra/GetPdfForPicaPau';
 import { verificarArraySislabra } from '../GetPdfSislabra/GetRegraSislabra/EmpregoSislabra';
 import { impeditivoVeiculo } from '../GetPdfSislabra/GetRegraSislabra/VeículoSislabra';
@@ -267,10 +267,9 @@ export class GetInformationFromSapienForSamirUseCase {
                 
                 
                 
-                console.log(CpfAutor)
-                const xpatgCpfAutorFormatado = getXPathText(parginaDosPrevFormatada, xpatgCpfAutor);
-                const pathNomeAutor = '/html/body/div/div[1]/table/tbody/tr[6]/td';
-                const pathNomeAutorFormatado = getXPathText(parginaDosPrevFormatada, pathNomeAutor); 
+                
+               
+               
                 
                 //console.log(pathNomeAutorFormatado)
                 var VerificarAutorMaisDeUmaAutorEmpresa: number = 0;
@@ -347,7 +346,7 @@ export class GetInformationFromSapienForSamirUseCase {
                                 responseForPicaPau.push(" Doações Eleitorais Cônjuge")
                             }
                             
-
+                            //VERIFICAR IMOVEIS EM SP
                             const imoveisSP = imoveisSp(pdf, CpfAutor); 
                             if(imoveisSP.length > 1 && VerificarAutorMaisDeUmaAutorImoveis < 1){
                                 VerificarAutorMaisDeUmaAutorImoveis++

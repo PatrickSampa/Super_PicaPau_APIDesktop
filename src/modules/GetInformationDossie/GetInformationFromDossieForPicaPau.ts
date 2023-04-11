@@ -11,9 +11,9 @@ export class GetInformationDossieForPicaPau{
 
         try{
         const DatasAtualEMenosDezesseis: Array<Date> = await requerimentos.dataRequerimento(paginaDosprevFormatada);
-        console.log("Data Requerimento: " + DatasAtualEMenosDezesseis.length); 
+        //console.log("Data Requerimento: " + DatasAtualEMenosDezesseis.length); 
         if(DatasAtualEMenosDezesseis[0] == null){
-            ArrayImpedimentos.push("AUSÊNCIA DE REQUERIMENTO")
+            ArrayImpedimentos.push("AUSÊNCIA DE REQUERIMENTO AUTOR")
         }else{
             const verificarDataFinal: boolean = await dataPrevidencias.Previdenciarias(DatasAtualEMenosDezesseis[0], DatasAtualEMenosDezesseis[1], paginaDosprevFormatada);
             if(verificarDataFinal){
@@ -26,12 +26,15 @@ export class GetInformationDossieForPicaPau{
         }
         
 
-        const verificarIdade: Array<boolean> = await calcularIdade.calcIdade(paginaDosprevFormatada);
-        
 
-        if(!verificarIdade[0] && verificarIdade.length != 0){
-            ArrayImpedimentos.push("IDADE")
-        }
+        const verificarIdade: Array<boolean> = await calcularIdade.calcIdade(paginaDosprevFormatada);
+       if(verificarIdade.length==0){
+        ArrayImpedimentos.push("AUTOR SEM SEXO DEFINIDO")
+
+       }else if(!verificarIdade[0] && verificarIdade.length != 0){
+        ArrayImpedimentos.push("IDADE")
+
+       }
         
 
 

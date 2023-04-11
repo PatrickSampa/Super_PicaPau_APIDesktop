@@ -13,6 +13,7 @@ class CalcularIdade {
         const generoFormatado = (0, Corre_aoDoErroDeFormatoDoSapiens_1.correçaoDoErroDeFormatoDoSapiens)((0, GetTextoPorXPATH_1.getXPathText)(parginaDosPrevFormatada, generoXptah));
         ;
         if (generoFormatado.length == 0) {
+            console.log("entrou idade vazia");
             return [];
         }
         let dataAjuizArray = dataAjuizFormatado.split("/");

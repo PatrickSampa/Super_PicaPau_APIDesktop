@@ -12,9 +12,8 @@ class GetInformationDossieForPicaPau {
         const ArrayImpedimentos = [];
         try {
             const DatasAtualEMenosDezesseis = await InformatioReque_1.requerimentos.dataRequerimento(paginaDosprevFormatada);
-            console.log("Data Requerimento: " + DatasAtualEMenosDezesseis.length);
             if (DatasAtualEMenosDezesseis[0] == null) {
-                ArrayImpedimentos.push("IDADE SEM GÊNERO");
+                ArrayImpedimentos.push("AUSÊNCIA DE REQUERIMENTO AUTOR");
             }
             else {
                 const verificarDataFinal = await InformationPro_1.dataPrevidencias.Previdenciarias(DatasAtualEMenosDezesseis[0], DatasAtualEMenosDezesseis[1], paginaDosprevFormatada);
@@ -27,7 +26,10 @@ class GetInformationDossieForPicaPau {
             ArrayImpedimentos.push("ERRO DOSPREV EMPREGO");
         }
         const verificarIdade = await GetInformationIdade_1.calcularIdade.calcIdade(paginaDosprevFormatada);
-        if (!verificarIdade[0] && verificarIdade.length != 0) {
+        if (verificarIdade.length == 0) {
+            ArrayImpedimentos.push("AUTOR SEM SEXO DEFINIDO");
+        }
+        else if (!verificarIdade[0] && verificarIdade.length != 0) {
             ArrayImpedimentos.push("IDADE");
         }
         const verificarLitispedencia = await GetInformationLitispendencia_1.litispendencia.funcLitis(paginaDosprevFormatada);

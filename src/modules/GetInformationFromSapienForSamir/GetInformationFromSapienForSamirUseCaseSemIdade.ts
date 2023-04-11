@@ -31,7 +31,7 @@ import { ordenarDatas } from '../../helps/BuscarDatasEmString';
 import { verificarDataNoPeriodoDeDezesseisAnos } from '../../helps/VerificarDataNoPeriodoDosdezeseisAnos';
 import { converterDatasParaDate } from '../../helps/TransformarStringParaFormatoDate';
 import { getInformationDossieForPicaPauSemIdade } from '../GetInformationDossie';
-import { readPDF } from '../GetPdfSislabra/teste1';
+import { readPDF } from '../GetPdfSislabra/ReadPdf';
 import { downloadPDFWithCookies,  deletePDF } from '../GetPdfSislabra/GetPdfSislabra/GetPdfForPicaPau';
 import { verificarArraySislabra } from '../GetPdfSislabra/GetRegraSislabra/EmpregoSislabra';
 import { impeditivoVeiculo } from '../GetPdfSislabra/GetRegraSislabra/VeículoSislabra';
