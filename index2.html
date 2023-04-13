@@ -300,7 +300,7 @@ h3{
 
 
 <body>
-  
+  <audio src="som abertura.wav" autoplay></audio>
   <div class="container">
     
    
@@ -349,6 +349,7 @@ h3{
     let cssElement1 = document.querySelector(".container .button-container div:first-child");
     let elem = cssElement1.parentNode;
     
+
     console.log(elem)
     function rural(){
         var link = document.getElementById("r");
@@ -380,6 +381,7 @@ h3{
     })
         
     async function checkInputs(){
+      audio.play();
       document.getElementById('erro').innerHTML = "";
       const cpfValue = cpf.value
       const senhaValue = senha.value
@@ -395,8 +397,9 @@ h3{
         console.log(data.login.senha)
         console.log(data.etiqueta)
         document.getElementById('triagem').innerHTML = "Triando Processos..."
+        
         await axios.post(url, data).then( data => { document.getElementById('erro').innerHTML = "Fim da Triagem"
-        console.log("passou")}).catch(err => document.getElementById('erro').innerHTML = `Usuário Incorreto`);
+        }).catch(err => document.getElementById('erro').innerHTML = `Usuário Incorreto`);
     
         cssElement4.classList.remove("testeee");
         cssElement4.style.backgroundImage = "";

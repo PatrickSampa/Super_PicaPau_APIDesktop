@@ -10,14 +10,31 @@ export class GetInformationDossieForPicaPauSemIdade{
         const ArrayImpedimentos: Array<string> = [];
 
         try{
-            const DatasAtualEMenosDezesseis: Array<Date> = await requerimentos.dataRequerimento(paginaDosprevFormatada);
-        const verificarDataFinal: boolean = await dataPrevidencias.Previdenciarias(DatasAtualEMenosDezesseis[0], DatasAtualEMenosDezesseis[1], paginaDosprevFormatada);
-        if(verificarDataFinal){
-            ArrayImpedimentos.push("EMPREGO")
+        const DatasAtualEMenosDezesseis: Array<Date> = await requerimentos.dataRequerimento(paginaDosprevFormatada);
+        //console.log("Data Requerimento: " + DatasAtualEMenosDezesseis.length); 
+        if(DatasAtualEMenosDezesseis[0] == null){
+            ArrayImpedimentos.push("AUSÊNCIA DE REQUERIMENTO AUTOR")
+        }else{
+            const verificarDataFinal: boolean = await dataPrevidencias.Previdenciarias(DatasAtualEMenosDezesseis[0], DatasAtualEMenosDezesseis[1], paginaDosprevFormatada);
+            if(verificarDataFinal){
+                ArrayImpedimentos.push("EMPREGO")
         }
+        }
+        
         }catch{
             ArrayImpedimentos.push("ERRO DOSPREV EMPREGO")
         }
+        
+
+
+        /* const verificarIdade: Array<boolean> = await calcularIdade.calcIdade(paginaDosprevFormatada);
+       if(verificarIdade.length==0){
+        ArrayImpedimentos.push("AUTOR SEM SEXO DEFINIDO")
+
+       }else if(!verificarIdade[0] && verificarIdade.length != 0){
+        ArrayImpedimentos.push("IDADE")
+
+       } */
         
 
 

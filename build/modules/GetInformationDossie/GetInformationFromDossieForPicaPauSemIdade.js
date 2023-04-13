@@ -11,9 +11,14 @@ class GetInformationDossieForPicaPauSemIdade {
         const ArrayImpedimentos = [];
         try {
             const DatasAtualEMenosDezesseis = await InformatioReque_1.requerimentos.dataRequerimento(paginaDosprevFormatada);
-            const verificarDataFinal = await InformationPro_1.dataPrevidencias.Previdenciarias(DatasAtualEMenosDezesseis[0], DatasAtualEMenosDezesseis[1], paginaDosprevFormatada);
-            if (verificarDataFinal) {
-                ArrayImpedimentos.push("EMPREGO");
+            if (DatasAtualEMenosDezesseis[0] == null) {
+                ArrayImpedimentos.push("AUSÊNCIA DE REQUERIMENTO AUTOR");
+            }
+            else {
+                const verificarDataFinal = await InformationPro_1.dataPrevidencias.Previdenciarias(DatasAtualEMenosDezesseis[0], DatasAtualEMenosDezesseis[1], paginaDosprevFormatada);
+                if (verificarDataFinal) {
+                    ArrayImpedimentos.push("EMPREGO");
+                }
             }
         }
         catch (_a) {

@@ -1,6 +1,6 @@
-export function verificarArraySislabra(StringSislabra: String, ProcurarCpfAutor: string): Array<boolean>{
-
-            const ArrayVerificarAutor: Array<any> = []
+export class Emprego{
+    async hundle(StringSislabra: String, ProcurarCpfAutor: string): Promise<Array<boolean>>{
+        const ArrayVerificarAutor: Array<any> = []
             const ocorrenciasCpfAutor: Array<any> = [];
            
             let verificarDoisAutor: number = 0;
@@ -33,5 +33,5 @@ export function verificarArraySislabra(StringSislabra: String, ProcurarCpfAutor:
         //console.log("Terceiro if")
         //console.log(ArrayVerificarAutor)
         return ArrayVerificarAutor;
-        
+    }
 }

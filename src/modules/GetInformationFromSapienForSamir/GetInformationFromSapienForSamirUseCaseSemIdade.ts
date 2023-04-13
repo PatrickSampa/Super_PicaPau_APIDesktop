@@ -30,15 +30,15 @@ import { encontrarDataMaisAtual } from '../../helps/VerificarDataMaisAtual';
 import { ordenarDatas } from '../../helps/BuscarDatasEmString';
 import { verificarDataNoPeriodoDeDezesseisAnos } from '../../helps/VerificarDataNoPeriodoDosdezeseisAnos';
 import { converterDatasParaDate } from '../../helps/TransformarStringParaFormatoDate';
-import { getInformationDossieForPicaPauSemIdade } from '../GetInformationDossie';
+import { getInformationDossieForPicaPau, getInformationDossieForPicaPauSemIdade } from '../GetInformationDossie';
 import { readPDF } from '../GetPdfSislabra/ReadPdf';
 import { downloadPDFWithCookies,  deletePDF } from '../GetPdfSislabra/GetPdfSislabra/GetPdfForPicaPau';
-import { verificarArraySislabra } from '../GetPdfSislabra/GetRegraSislabra/EmpregoSislabra';
-import { impeditivoVeiculo } from '../GetPdfSislabra/GetRegraSislabra/VeículoSislabra';
-import { enderecosEncontrados } from '../GetPdfSislabra/GetRegraSislabra/enderecoEncontrado';
-import { doacoesEleitorais } from '../GetPdfSislabra/GetRegraSislabra/DoacoesEleitoraisSislabra';
-import { imoveisSp } from '../GetPdfSislabra/GetRegraSislabra/imoveisSaopaulo';
-
+/* import { verificarArraySislabra } from '../GetInformationSislabra/GetInformationEmprego/EmpregoSislabra';
+import { impeditivoVeiculo } from '../GetInformationSislabra/GetInformationVeiculo/VeículoSislabra';
+import { enderecosEncontrados } from '../GetInformationSislabra/GetInformationEndereco/enderecoEncontrado';
+import { doacoesEleitorais } from '../GetInformationSislabra/GetInformationDoacoesEleitorais/DoacoesEleitoraisSislabra';
+import { imoveisSp } from '../GetInformationSislabra/GetInformationImoveis/imoveisSaopaulo'; */
+import { getInformationSislabraForPicaPau } from '../GetInformationSislabra';
 export class GetInformationFromSapienForSamirUseCaseSemIdade {
 
     async execute(data: IGetInformationsFromSapiensDTO): Promise<any> {
@@ -218,12 +218,20 @@ export class GetInformationFromSapienForSamirUseCaseSemIdade {
                 var objDosis2: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - AUTOR");
                 var objDosis3: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - POSSÍVEL CÔNJUGE OU COMPANHEIRO");
                 
-                
+                if(objDosis[0] != undefined){
+                    arrayIdSislabra.push(objDosis[0]);
+                }
+                if(objDosis2[0] != undefined){
+                    arrayIdSislabra.push(objDosis2[0])
+                }
+                if(objDosis3[0] != undefined){
+                    arrayIdSislabra.push(objDosis3[0])
+                }
                 /* const idParaBuscarIdSislabra1: number = objDosis[0].documentoJuntado.componentesDigitais[0].id;
                 const idParaBuscarIdSislabra2: number = objDosis[1].documentoJuntado.componentesDigitais[0].id; */
                 
 
-                arrayIdSislabra.push(...objDosis, ...objDosis2, ...objDosis3);
+                /* arrayIdSislabra.push(...objDosis, ...objDosis2, ...objDosis3); */
 
                 if(arrayIdSislabra.length <= 0){
                     (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "SISLABRA NÃO ENCONTRADO", tarefaId }))
@@ -259,13 +267,12 @@ export class GetInformationFromSapienForSamirUseCaseSemIdade {
                 
                 
                 
-                console.log(CpfAutor)
-                const xpatgCpfAutorFormatado = getXPathText(parginaDosPrevFormatada, xpatgCpfAutor);
-                const pathNomeAutor = '/html/body/div/div[1]/table/tbody/tr[6]/td';
-                const pathNomeAutorFormatado = getXPathText(parginaDosPrevFormatada, pathNomeAutor); 
+                
+               
+               
                 
                 //console.log(pathNomeAutorFormatado)
-                var VerificarAutorMaisDeUmaAutorEmpresa: number = 0;
+                /* var VerificarAutorMaisDeUmaAutorEmpresa: number = 0;
                 var VerificarAutorMaisDeUmaConjugeEmpresa: number = 0;
                 var VerificarAutorMaisDeUmaAutorVeiculo: number = 0;
                 var VerificarAutorMaisDeUmaConjugeVeiculo: number = 0;
@@ -274,9 +281,9 @@ export class GetInformationFromSapienForSamirUseCaseSemIdade {
                 var VerificarAutorMaisDeUmaAutorDoacoes: number = 0;
                 var VerificarAutorMaisDeUmaConjugeDoacoes : number = 0;
                 var VerificarAutorMaisDeUmaAutorImoveis: number = 0;
-                var VerificarAutorMaisDeUmaConjugeImoveis : number = 0;
+                var VerificarAutorMaisDeUmaConjugeImoveis : number = 0; */
 
-                    for(let i=0; i<arrayDosIDParaBuscarpdf.length; i++){
+                    /* for(let i=0; i<arrayDosIDParaBuscarpdf.length; i++){
                         //console.log(`https://sapiens.agu.gov.br/documento/${arrayDosIDParaBuscarpdf[i]}`)
                         await downloadPDFWithCookies(`https://sapiens.agu.gov.br/documento/${arrayDosIDParaBuscarpdf[i]}`,cookie)
                         .then(() => console.log('PDF downloaded successfully!'))
@@ -284,13 +291,13 @@ export class GetInformationFromSapienForSamirUseCaseSemIdade {
                         console.log("Entrou aqui")
                         try{
                             console.log("aqui")
-                        const pdf = await readPDF('build/modules/GetPdfSislabra/GetPdfSislabra/sislabra.pdf')
+                        const pdf = await readPDF('build/modules/GetPdfSislabra/GetPdfSislabra/sislabra.pdf') */
                         
                         /* Ative quando for para produção
                         const pdf = await readPDF('resources/app/build/modules/GetPdfSislabra/GetPdfSislabra/sislabra.pdf') */
                         
 
-                            //VERIFICAÇÃO IMPEDITIVO EMPRESA
+                            /* //VERIFICAÇÃO IMPEDITIVO EMPRESA
                             const impedEmprego: Array<boolean> = verificarArraySislabra(pdf, CpfAutor);
                             if(impedEmprego.length >= 2 && VerificarAutorMaisDeUmaAutorEmpresa < 1){
                                 VerificarAutorMaisDeUmaAutorEmpresa++;
@@ -339,7 +346,7 @@ export class GetInformationFromSapienForSamirUseCaseSemIdade {
                                 responseForPicaPau.push(" Doações Eleitorais Cônjuge")
                             }
                             
-
+                            //VERIFICAR IMOVEIS EM SP
                             const imoveisSP = imoveisSp(pdf, CpfAutor); 
                             if(imoveisSP.length > 1 && VerificarAutorMaisDeUmaAutorImoveis < 1){
                                 VerificarAutorMaisDeUmaAutorImoveis++
@@ -359,7 +366,7 @@ export class GetInformationFromSapienForSamirUseCaseSemIdade {
                             continue;
                         }
                     }
-                    console.log(responseForPicaPau)
+                    console.log(responseForPicaPau) */
                     
                 
                 
@@ -371,7 +378,7 @@ export class GetInformationFromSapienForSamirUseCaseSemIdade {
                   
                    /*  const procurarAdvogadoPilantraCapa: boolean = IdentificarAdvogadoPilantra((await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie)));
                     if(!procurarAdvogadoPilantraCapa){
-                        response2.push("IMPEDITIVO ADVOGADO");
+                        response2.push("IMPEDITIVO ADVOGADO"  );
                     }
                     
                     
@@ -523,6 +530,9 @@ export class GetInformationFromSapienForSamirUseCaseSemIdade {
 
                     let impedDossie: Array<string> = await getInformationDossieForPicaPauSemIdade.impedimentos(parginaDosPrevFormatada, parginaDosPrev);
                     responseForPicaPau.push(...impedDossie) 
+
+                    let impedSislabra: Array<string> = await getInformationSislabraForPicaPau.impedimentos(arrayDosIDParaBuscarpdf, cookie, CpfAutor)
+                    responseForPicaPau.push(...impedSislabra)
                 
 
                     /* let impedCapa: Array<String> = await impedimentosCapa.Impedimentos(await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie));
@@ -567,7 +577,7 @@ export class GetInformationFromSapienForSamirUseCaseSemIdade {
 //console.log(response2)
                 
                 if(responseForPicaPau.length==0){
-                    await updateEtiquetaUseCase.execute({cookie, etiqueta: "PROCESSO LIMPOO", tarefaId});
+                    await updateEtiquetaUseCase.execute({cookie, etiqueta: "PROCESSO LIMPO", tarefaId});
                 }else{
                     let etiquetaFinal = "";
                     for(let j = 0; j<responseForPicaPau.length; j++){

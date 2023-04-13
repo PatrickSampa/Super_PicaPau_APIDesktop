@@ -1,7 +1,8 @@
-export function imoveisSp(StringSislabra: String, cpfAutor: any): Array<boolean>{
 
-    const ocorrenciasCpfAutor: Array<any> = [];
-    const novaSislabra = StringSislabra.replace(/\s{3,}/g, ",");
+export class DoacoesEleitorais{
+    async hundle(StringSislabra: String, cpfAutor: string): Promise<Array<boolean>>{
+        const ocorrenciasCpfAutor: Array<any> = [];
+        const novaSislabra = StringSislabra.replace(/\s{3,}/g, ",");
 
 
    
@@ -13,7 +14,7 @@ export function imoveisSp(StringSislabra: String, cpfAutor: any): Array<boolean>
 
 
     
-    if(novaSislabra.indexOf("Imóveis na Cidade de SP - Nenhum dado encontrado") != -1){
+    if(novaSislabra.indexOf("Doações Eleitorais Realizadas - Nenhum dado encontrado") != -1){
         return []
     }else{
         if(ocorrenciasCpfAutor.length>1){
@@ -22,5 +23,7 @@ export function imoveisSp(StringSislabra: String, cpfAutor: any): Array<boolean>
             return [true]
         }
     }
-
+    }
 }
+
+

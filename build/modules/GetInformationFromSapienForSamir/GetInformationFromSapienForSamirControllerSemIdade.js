@@ -2,13 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GetInformationFromSapienForSamirControllerSemIdade = void 0;
 class GetInformationFromSapienForSamirControllerSemIdade {
-    constructor(getInformationFromSapienForSamirUseCase) {
-        this.getInformationFromSapienForSamirUseCase = getInformationFromSapienForSamirUseCase;
+    constructor(getInformationFromSapienForSamirUseCaseSemIdade) {
+        this.getInformationFromSapienForSamirUseCaseSemIdade = getInformationFromSapienForSamirUseCaseSemIdade;
     }
     async handle(request, response) {
         const data = request.body;
         try {
-            const result = await this.getInformationFromSapienForSamirUseCase.execute(data);
+            const result = await this.getInformationFromSapienForSamirUseCaseSemIdade.execute(data);
             response.status(200).json(result);
         }
         catch (error) {
