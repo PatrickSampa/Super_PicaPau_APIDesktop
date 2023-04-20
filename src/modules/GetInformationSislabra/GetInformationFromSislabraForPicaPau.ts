@@ -24,6 +24,7 @@ export class GetInformationSislabraForPicaPau{
 
                     for(let i=0; i<arrayDosIDParaBuscarpdf.length; i++){
                         //console.log(`https://sapiens.agu.gov.br/documento/${arrayDosIDParaBuscarpdf[i]}`)
+                        
                         await downloadPDFWithCookies(`https://sapiens.agu.gov.br/documento/${arrayDosIDParaBuscarpdf[i]}`,cookie)
                         .then(() => console.log('PDF downloaded successfully!'))
                         .catch((error) => console.error('Error downloading PDF:', error));
@@ -32,8 +33,8 @@ export class GetInformationSislabraForPicaPau{
                             console.log("aqui")
                         const pdf = await readPDF('build/modules/GetPdfSislabra/GetPdfSislabra/sislabra.pdf')
                         
-                        /* Ative quando for para produção
-                        const pdf = await readPDF('resources/app/build/modules/GetPdfSislabra/GetPdfSislabra/sislabra.pdf') */
+                        //Ative quando for para produção
+                        /* const pdf = await readPDF('resources/app/build/modules/GetPdfSislabra/GetPdfSislabra/sislabra.pdf') */
                         
 
                             //VERIFICAÇÃO IMPEDITIVO EMPRESA

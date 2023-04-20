@@ -22,7 +22,7 @@ export class GetInformationDossieForPicaPauSemIdade{
         }
         
         }catch{
-            ArrayImpedimentos.push("ERRO DOSPREV EMPREGO")
+            ArrayImpedimentos.push("VÍNCULO ABERTO")
         }
         
 

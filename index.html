@@ -325,7 +325,7 @@ h3{
 
 
 <body>
-  <audio id="myAudio" src="Tchuc-Tchuc.wav" preload="auto" autoplay loop></audio>
+
   <div class="container">
     
     <div class="popup" id="popup">
@@ -382,7 +382,7 @@ h3{
     let cssElement2 = document.querySelector(".container .button-container div:nth-child(2)");
     let cssElement1 = document.querySelector(".container .button-container div:first-child");
     let elem = cssElement1.parentNode;
-    var audio = document.getElementById("myAudio");
+
 
     
     console.log(elem)
@@ -460,7 +460,7 @@ h3{
         console.log(data.login.senha)
         console.log(data.etiqueta)
         document.getElementById('triagem').innerHTML = "Triando Processos..."
-        audio.play();
+  
         await axios.post(url, data).then( data => { document.getElementById('erro').innerHTML = "Fim da Triagem"}).catch(err => document.getElementById('erro').innerHTML = `Usuário Incorreto`)
         document.getElementById('triagem').innerHTML = "Iniciar Triagem";
         cssElement4.classList.remove("testeee");

@@ -23,11 +23,11 @@ class GetInformationDossieForPicaPau {
             }
         }
         catch (_a) {
-            ArrayImpedimentos.push("ERRO DOSPREV EMPREGO");
+            ArrayImpedimentos.push("VÍNCULO ABERTO");
         }
         const verificarIdade = await GetInformationIdade_1.calcularIdade.calcIdade(paginaDosprevFormatada);
         if (verificarIdade.length == 0) {
-            ArrayImpedimentos.push("AUTOR SEM SEXO DEFINIDO");
+            ArrayImpedimentos.push("IDADE INDEFINIDA");
         }
         else if (!verificarIdade[0] && verificarIdade.length != 0) {
             ArrayImpedimentos.push("IDADE");

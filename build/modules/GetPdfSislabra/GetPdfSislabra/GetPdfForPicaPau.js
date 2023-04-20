@@ -16,7 +16,6 @@ async function downloadPDFWithCookies(url, cookies) {
         responseType: 'arraybuffer',
     });
     const filePath = path_1.default.join(__dirname, 'sislabra.pdf');
-    console.log(filePath);
     fs_1.default.writeFileSync(filePath, response.data);
 }
 exports.downloadPDFWithCookies = downloadPDFWithCookies;

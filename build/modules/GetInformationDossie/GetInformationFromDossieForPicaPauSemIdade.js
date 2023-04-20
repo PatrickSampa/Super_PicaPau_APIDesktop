@@ -22,7 +22,7 @@ class GetInformationDossieForPicaPauSemIdade {
             }
         }
         catch (_a) {
-            ArrayImpedimentos.push("ERRO DOSPREV EMPREGO");
+            ArrayImpedimentos.push("VÍNCULO ABERTO");
         }
         const verificarLitispedencia = await GetInformationLitispendencia_1.litispendencia.funcLitis(paginaDosprevFormatada);
         if (!verificarLitispedencia) {

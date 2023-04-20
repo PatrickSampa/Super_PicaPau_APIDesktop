@@ -22,14 +22,14 @@ export class GetInformationDossieForPicaPau{
         }
         
         }catch{
-            ArrayImpedimentos.push("ERRO DOSPREV EMPREGO")
+            ArrayImpedimentos.push("VÍNCULO ABERTO")
         }
         
 
 
         const verificarIdade: Array<boolean> = await calcularIdade.calcIdade(paginaDosprevFormatada);
        if(verificarIdade.length==0){
-        ArrayImpedimentos.push("AUTOR SEM SEXO DEFINIDO")
+        ArrayImpedimentos.push("IDADE INDEFINIDA")
 
        }else if(!verificarIdade[0] && verificarIdade.length != 0){
         ArrayImpedimentos.push("IDADE")
