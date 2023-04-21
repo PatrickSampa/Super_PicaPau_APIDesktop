@@ -427,7 +427,15 @@ h3{
         console.log(data.login.senha)
         console.log(data.etiqueta)
         document.getElementById('triagem').innerHTML = "Triando Processos..."
-        await axios.post(url, data).then( data => { document.getElementById('erro').innerHTML = "Fim da Triagem"}).catch(err => document.getElementById('erro').innerHTML = `Usuário Incorreto`)
+        await axios.post(url, data).then( data => { document.getElementById('erro').innerHTML = "Fim da Triagem"}).catch(err => {
+          const objetoErro = (err.response.data)
+          /* console.log((objetoErro.message)); */
+          if(objetoErro.message == "Cannot read properties of undefined (reading 'result')"){
+            document.getElementById('erro').innerHTML = `Usuário Incorreto`
+          }else{
+            document.getElementById('erro').innerHTML = `ERRO NO SERVIDOR`
+          }
+        } )
         document.getElementById('triagem').innerHTML = "Iniciar Triagem";
         cssElement4.classList.remove("testeee");
         cssElement4.style.backgroundImage = "";

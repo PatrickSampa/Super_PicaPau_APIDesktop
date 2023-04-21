@@ -151,6 +151,7 @@ export class GetInformationFromSapienForSamirUseCaseSemIdade {
                     let IdDosErroCatch: any = ""
                     const xpatgCpfAutor = '/html/body/div/div[1]/table/tbody/tr[7]/td';
                     const verificarCpfParaEntrarNoIf = getXPathText(parginaDosPrevFormatadaParaId, xpatgCpfAutor)
+                    let VerificarEtapaDoisDossie: boolean = false;
     
                     if(verificarCpfParaEntrarNoIf != CpfAutor){
                         //console.log('entrou')
@@ -172,6 +173,12 @@ export class GetInformationFromSapienForSamirUseCaseSemIdade {
                                     break;
                                 }
                                 
+                            }
+
+                            //Irá cair nesse if, caso tenha dossie no documento, porem nenhum dossie é do autor;
+                            if(VerificarEtapaDoisDossie == false){
+                                (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ECONTRADO", tarefaId }))
+                                continue;
                             }
                             
                         }catch{

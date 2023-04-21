@@ -84,7 +84,7 @@ export class GetInformationFromSapienForSamirUseCase {
                     var procurarDossies = arrayDeDocumentos.filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
                     //console.log(objectDosPrev2[0].documentoJuntado.componentesDigitais[0].id)
     
-    
+                    
     
     
     
@@ -147,11 +147,13 @@ export class GetInformationFromSapienForSamirUseCase {
                         }
                         idProcurarPoloAtivo++;
                     }
+                    console.log(CpfAutor)
                     //
     
                     let IdDosErroCatch: any = ""
                     const xpatgCpfAutor = '/html/body/div/div[1]/table/tbody/tr[7]/td';
                     const verificarCpfParaEntrarNoIf = getXPathText(parginaDosPrevFormatadaParaId, xpatgCpfAutor)
+                    let VerificarEtapaDoisDossie: boolean = false;
     
                     if(verificarCpfParaEntrarNoIf != CpfAutor){
                         //console.log('entrou')
@@ -173,6 +175,12 @@ export class GetInformationFromSapienForSamirUseCase {
                                     break;
                                 }
                                 
+                            }
+
+                            //Irá cair nesse if, caso tenha dossie no documento, porem nenhum dossie é do autor;
+                            if(VerificarEtapaDoisDossie == false){
+                                (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ECONTRADO", tarefaId }))
+                                continue;
                             }
                             
                         }catch{

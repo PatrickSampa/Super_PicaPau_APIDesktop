@@ -34,9 +34,6 @@ class GetInformationFromSapienForSamirUseCase {
                         arrayDeDocumentos = (await index_1.getArvoreDocumentoUseCase.execute(objectGetArvoreDocumento)).reverse();
                     }
                     catch (error) {
-                        console.log(error);
-                        (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV COM FALHA NA PESQUISA", tarefaId }));
-                        continue;
                     }
                     const arrayDosIDParaBuscarpdf = [];
                     const arrayIdSislabra = [];
@@ -48,18 +45,8 @@ class GetInformationFromSapienForSamirUseCase {
                         arrayDeDocumentos = await (0, coletarArvoreDeDocumentoDoPassivo_1.coletarArvoreDeDocumentoDoPassivo)(objectGetArvoreDocumento);
                         procurarDossies[0] = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
                         objectDosPrevNaoExisti = procurarDossies[0] == null;
-                        if (objectDosPrevNaoExisti) {
-                            console.log("DOSPREV NÃO ECONTRADO");
-                            (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ECONTRADO", tarefaId }));
-                            continue;
-                        }
                     }
                     const dosPrevSemIdParaPesquisa = (procurarDossies[0].documentoJuntado.componentesDigitais.length) <= 0;
-                    if (dosPrevSemIdParaPesquisa) {
-                        console.log("DOSPREV COM FALHA NA PESQUISA");
-                        (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV COM FALHA NA PESQUISA", tarefaId }));
-                        continue;
-                    }
                     let idDosprevParaPesquisaId = procurarDossies[0].documentoJuntado.componentesDigitais[0].id;
                     let parginaDosPrevParaId = await GetDocumento_1.getDocumentoUseCase.execute({ cookie, idDocument: idDosprevParaPesquisaId });
                     let parginaDosPrevFormatadaParaId = new JSDOM(parginaDosPrevParaId);
@@ -85,6 +72,7 @@ class GetInformationFromSapienForSamirUseCase {
                         }
                         idProcurarPoloAtivo++;
                     }
+                    console.log(CpfAutor);
                     let IdDosErroCatch = "";
                     const xpatgCpfAutor = '/html/body/div/div[1]/table/tbody/tr[7]/td';
                     const verificarCpfParaEntrarNoIf = (0, GetTextoPorXPATH_1.getXPathText)(parginaDosPrevFormatadaParaId, xpatgCpfAutor);
