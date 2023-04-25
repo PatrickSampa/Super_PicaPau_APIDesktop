@@ -52,15 +52,22 @@ export class GetInformationFromSapienForSamirUseCaseSemIdade {
 
         let response: Array<IInformationsForCalculeDTO> = [];
         let responseForPicaPau: Array<String> = [];
+        let tarefaId: any = "";
+
         
-        try {
+        
             let tarefas = await getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta });
             let VerificarSeAindExisteProcesso: boolean = true;
             while(VerificarSeAindExisteProcesso){
 
                 for (var i = 0; i <= tarefas.length - 1; i++) {
                     console.log("Qantidade faltando triar", (tarefas.length - i));
-                    const tarefaId = tarefas[i].id;
+                    
+                    try{
+
+                    
+                    
+                    tarefaId = tarefas[i].id; 
                     const objectGetArvoreDocumento: IGetArvoreDocumentoDTO = { nup: tarefas[i].pasta.NUP, chave: tarefas[i].pasta.chaveAcesso, cookie, tarefa_id: tarefas[i].id }
                     let arrayDeDocumentos: ResponseArvoreDeDocumento[];
     
@@ -605,6 +612,12 @@ export class GetInformationFromSapienForSamirUseCaseSemIdade {
     
     
                     responseForPicaPau = [];
+                } catch (error) {
+                    console.log(error);
+                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "ERRO AO TRIAR ESSE DOCUMENTO", tarefaId }));
+                    continue;
+                }
+
                 }
                 tarefas = await getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta });
                 if(tarefas.length==0){
@@ -614,16 +627,7 @@ export class GetInformationFromSapienForSamirUseCaseSemIdade {
             }
             
             return await response
-        } catch (error) {
-            console.log(error);
-            console.log(response.length)
-            if (response.length > 0) {
-                return await response
-            }
-            else {
-                new error;
-            }
-        }
+        
     }
 
 }

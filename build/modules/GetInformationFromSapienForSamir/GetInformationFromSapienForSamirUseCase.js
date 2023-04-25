@@ -21,19 +21,23 @@ class GetInformationFromSapienForSamirUseCase {
         const usuario_id = `${usuario[0].id}`;
         let response = [];
         let responseForPicaPau = [];
+        let tarefaId = "";
         try {
             let tarefas = await GetTarefa_1.getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta });
             let VerificarSeAindExisteProcesso = true;
             while (VerificarSeAindExisteProcesso) {
                 for (var i = 0; i <= tarefas.length - 1; i++) {
                     console.log("Qantidade faltando triar", (tarefas.length - i));
-                    const tarefaId = tarefas[i].id;
+                    tarefaId = tarefas[i].id;
                     const objectGetArvoreDocumento = { nup: tarefas[i].pasta.NUP, chave: tarefas[i].pasta.chaveAcesso, cookie, tarefa_id: tarefas[i].id };
                     let arrayDeDocumentos;
                     try {
                         arrayDeDocumentos = (await index_1.getArvoreDocumentoUseCase.execute(objectGetArvoreDocumento)).reverse();
                     }
                     catch (error) {
+                        console.log(error);
+                        (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV COM FALHA NA PESQUISA", tarefaId }));
+                        continue;
                     }
                     const arrayDosIDParaBuscarpdf = [];
                     const arrayIdSislabra = [];
@@ -45,8 +49,18 @@ class GetInformationFromSapienForSamirUseCase {
                         arrayDeDocumentos = await (0, coletarArvoreDeDocumentoDoPassivo_1.coletarArvoreDeDocumentoDoPassivo)(objectGetArvoreDocumento);
                         procurarDossies[0] = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
                         objectDosPrevNaoExisti = procurarDossies[0] == null;
+                        if (objectDosPrevNaoExisti) {
+                            console.log("DOSPREV NÃO ECONTRADO");
+                            (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ECONTRADO", tarefaId }));
+                            continue;
+                        }
                     }
                     const dosPrevSemIdParaPesquisa = (procurarDossies[0].documentoJuntado.componentesDigitais.length) <= 0;
+                    if (dosPrevSemIdParaPesquisa) {
+                        console.log("DOSPREV COM FALHA NA PESQUISA");
+                        (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV COM FALHA NA PESQUISA", tarefaId }));
+                        continue;
+                    }
                     let idDosprevParaPesquisaId = procurarDossies[0].documentoJuntado.componentesDigitais[0].id;
                     let parginaDosPrevParaId = await GetDocumento_1.getDocumentoUseCase.execute({ cookie, idDocument: idDosprevParaPesquisaId });
                     let parginaDosPrevFormatadaParaId = new JSDOM(parginaDosPrevParaId);
@@ -76,6 +90,7 @@ class GetInformationFromSapienForSamirUseCase {
                     let IdDosErroCatch = "";
                     const xpatgCpfAutor = '/html/body/div/div[1]/table/tbody/tr[7]/td';
                     const verificarCpfParaEntrarNoIf = (0, GetTextoPorXPATH_1.getXPathText)(parginaDosPrevFormatadaParaId, xpatgCpfAutor);
+                    let VerificarEtapaDoisDossie = false;
                     if (verificarCpfParaEntrarNoIf != CpfAutor) {
                         try {
                             for (let j = 0; j < procurarDossies.length; j++) {
@@ -93,6 +108,10 @@ class GetInformationFromSapienForSamirUseCase {
                                     parginaDosPrevFormatada = new JSDOM(parginaDosPrev);
                                     break;
                                 }
+                            }
+                            if (VerificarEtapaDoisDossie == false) {
+                                (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ECONTRADO", tarefaId }));
+                                continue;
                             }
                         }
                         catch (_a) {
@@ -185,6 +204,7 @@ class GetInformationFromSapienForSamirUseCase {
         catch (error) {
             console.log(error);
             console.log(response.length);
+            (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "ERRO AO TRIAR ESSE DOCUMENTO", tarefaId }));
             if (response.length > 0) {
                 return await response;
             }

@@ -21,13 +21,14 @@ class GetInformationFromSapienForSamirUseCaseSemIdade {
         const usuario_id = `${usuario[0].id}`;
         let response = [];
         let responseForPicaPau = [];
-        try {
-            let tarefas = await GetTarefa_1.getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta });
-            let VerificarSeAindExisteProcesso = true;
-            while (VerificarSeAindExisteProcesso) {
-                for (var i = 0; i <= tarefas.length - 1; i++) {
-                    console.log("Qantidade faltando triar", (tarefas.length - i));
-                    const tarefaId = tarefas[i].id;
+        let tarefaId = "";
+        let tarefas = await GetTarefa_1.getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta });
+        let VerificarSeAindExisteProcesso = true;
+        while (VerificarSeAindExisteProcesso) {
+            for (var i = 0; i <= tarefas.length - 1; i++) {
+                console.log("Qantidade faltando triar", (tarefas.length - i));
+                try {
+                    tarefaId = tarefas[i].id;
                     const objectGetArvoreDocumento = { nup: tarefas[i].pasta.NUP, chave: tarefas[i].pasta.chaveAcesso, cookie, tarefa_id: tarefas[i].id };
                     let arrayDeDocumentos;
                     try {
@@ -88,6 +89,7 @@ class GetInformationFromSapienForSamirUseCaseSemIdade {
                     let IdDosErroCatch = "";
                     const xpatgCpfAutor = '/html/body/div/div[1]/table/tbody/tr[7]/td';
                     const verificarCpfParaEntrarNoIf = (0, GetTextoPorXPATH_1.getXPathText)(parginaDosPrevFormatadaParaId, xpatgCpfAutor);
+                    let VerificarEtapaDoisDossie = false;
                     if (verificarCpfParaEntrarNoIf != CpfAutor) {
                         try {
                             for (let j = 0; j < procurarDossies.length; j++) {
@@ -105,6 +107,10 @@ class GetInformationFromSapienForSamirUseCaseSemIdade {
                                     parginaDosPrevFormatada = new JSDOM(parginaDosPrev);
                                     break;
                                 }
+                            }
+                            if (VerificarEtapaDoisDossie == false) {
+                                (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ECONTRADO", tarefaId }));
+                                continue;
                             }
                         }
                         catch (_a) {
@@ -187,23 +193,18 @@ class GetInformationFromSapienForSamirUseCaseSemIdade {
                     }
                     responseForPicaPau = [];
                 }
-                tarefas = await GetTarefa_1.getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta });
-                if (tarefas.length == 0) {
-                    VerificarSeAindExisteProcesso = false;
+                catch (error) {
+                    console.log(error);
+                    (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "ERRO AO TRIAR ESSE DOCUMENTO", tarefaId }));
+                    continue;
                 }
             }
-            return await response;
-        }
-        catch (error) {
-            console.log(error);
-            console.log(response.length);
-            if (response.length > 0) {
-                return await response;
-            }
-            else {
-                new error;
+            tarefas = await GetTarefa_1.getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta });
+            if (tarefas.length == 0) {
+                VerificarSeAindExisteProcesso = false;
             }
         }
+        return await response;
     }
 }
 exports.GetInformationFromSapienForSamirUseCaseSemIdade = GetInformationFromSapienForSamirUseCaseSemIdade;
