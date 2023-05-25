@@ -1,37 +1,64 @@
+const fs = require("fs");
+import { error } from "console";
+import { lePdf } from "../../GetPdfSislabra/GetPdfSislabra/HeadPdf";
 export class Emprego{
-    async hundle(StringSislabra: String, ProcurarCpfAutor: string): Promise<Array<boolean>>{
-        const ArrayVerificarAutor: Array<any> = []
-            const ocorrenciasCpfAutor: Array<any> = [];
-           
-            let verificarDoisAutor: number = 0;
-            const novaSislabra = StringSislabra.replace(/\s{3,}/g, ",");
-            const novaStringparaAcharNome = novaSislabra.split("CPF")
-            let indiceCpf =  novaSislabra.indexOf(ProcurarCpfAutor);
-            while ( indiceCpf >= 0) {
-                ocorrenciasCpfAutor.push(indiceCpf);
-                indiceCpf = novaSislabra.indexOf(ProcurarCpfAutor,  indiceCpf + 1);
-            }
-            //console.log(ocorrenciasCpfAutor);
+    async handle(StringSislabra: String, cpfAutor: any): Promise</* Array<boolean> */ any>{
 
-        if(StringSislabra.indexOf('Situação Empresa') != -1){
-            //console.log(novaStringparaAcharNome[2].indexOf(ProcurarNomeAutor))
-            /* if(novaStringparaAcharNome[1].indexOf(ProcurarCpfAutor) != -1 || novaStringparaAcharNome[2].indexOf(ProcurarCpfAutor) != -1){ */
-            if(ocorrenciasCpfAutor.length>1){
-                //console.log("Primeiro if")
-                ArrayVerificarAutor.push(true, true, verificarDoisAutor)
-                //console.log("Entrou aqui nos 2")
-                return ArrayVerificarAutor
-                
+        function extrairDados(texto): Array<any> {
+            const padrao = /\d{2}\/\d{2}\/\d{4}[^]*?(?=\d{2}\/\d{2}\/\d{4}|\b[a-zA-Z]+\b|$)/g;
+            const matches = texto.matchAll(padrao);
+            const dados: Array<any> = [];
+          
+            for (const match of matches) {
+              dados.push(match[0].trim());
             }
-            ArrayVerificarAutor.push(true)
-            //console.log("Segundo IF")
-            //console.log(ArrayVerificarAutor)
-            return ArrayVerificarAutor;
-            
+          
+            return dados;
+          }
+
+
+          function formatarValor(valor) {
+            const padraoData = /^\d{2}\/\d{2}\/\d{4}/; // Expressão regular para verificar o padrão de data
+            const valorSemData = valor.replace(padraoData, '').trim();
+            return valorSemData;
+          }
+          
+        const ocorrenciasCpfAutor: Array<any> = [];
+        const novaSislabra = StringSislabra.replace(/\s{3,}/g, ",");
+
+        let indiceCpf =  novaSislabra.indexOf(cpfAutor);
+        while ( indiceCpf >= 0) {
+            ocorrenciasCpfAutor.push(indiceCpf);
+            indiceCpf = novaSislabra.indexOf(cpfAutor,  indiceCpf + 1);
         }
-        ArrayVerificarAutor.push(false)
-        //console.log("Terceiro if")
-        //console.log(ArrayVerificarAutor)
-        return ArrayVerificarAutor;
-    }
+
+        console.log("lang" + ocorrenciasCpfAutor.length)
+            
+            
+            const valores = await lePdf();
+            if(valores == null){
+                return [];
+            }
+            
+           /*  console.log("#$$$$$$$$$$$$")
+            console.log(typeof(valores))
+            console.log(valores)
+            console.log(valores[0])
+            console.log(typeof(valores[0])) */
+            for(let j=0; j<valores.length; j++){
+                
+                if(parseFloat(valores[j].replace(".","").replace(",","."))>3000){    
+                    if(ocorrenciasCpfAutor.length>1){
+                        return [true, true];
+                        }else{
+                            return [true]
+                        }
+                }
+            }
+        return [];
+
+
+        
+        }
 }
+

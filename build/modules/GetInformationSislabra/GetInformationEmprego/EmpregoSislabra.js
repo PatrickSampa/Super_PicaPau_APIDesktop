@@ -1,29 +1,50 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Emprego = void 0;
+const fs = require("fs");
+const HeadPdf_1 = require("../../GetPdfSislabra/GetPdfSislabra/HeadPdf");
 class Emprego {
-    async hundle(StringSislabra, ProcurarCpfAutor) {
-        const ArrayVerificarAutor = [];
+    async handle(StringSislabra, cpfAutor) {
+        function extrairDados(texto) {
+            const padrao = /\d{2}\/\d{2}\/\d{4}[^]*?(?=\d{2}\/\d{2}\/\d{4}|\b[a-zA-Z]+\b|$)/g;
+            const matches = texto.matchAll(padrao);
+            const dados = [];
+            for (const match of matches) {
+                dados.push(match[0].trim());
+            }
+            return dados;
+        }
+        function formatarValor(valor) {
+            const padraoData = /^\d{2}\/\d{2}\/\d{4}/;
+            const valorSemData = valor.replace(padraoData, '').trim();
+            return valorSemData;
+        }
         const ocorrenciasCpfAutor = [];
-        let verificarDoisAutor = 0;
         const novaSislabra = StringSislabra.replace(/\s{3,}/g, ",");
-        const novaStringparaAcharNome = novaSislabra.split("CPF");
-        let indiceCpf = novaSislabra.indexOf(ProcurarCpfAutor);
+        let indiceCpf = novaSislabra.indexOf(cpfAutor);
         while (indiceCpf >= 0) {
             ocorrenciasCpfAutor.push(indiceCpf);
-            indiceCpf = novaSislabra.indexOf(ProcurarCpfAutor, indiceCpf + 1);
+            indiceCpf = novaSislabra.indexOf(cpfAutor, indiceCpf + 1);
         }
-        if (StringSislabra.indexOf('Situação Empresa') != -1) {
-            if (ocorrenciasCpfAutor.length > 1) {
-                ArrayVerificarAutor.push(true, true, verificarDoisAutor);
-                return ArrayVerificarAutor;
+        console.log("lang" + ocorrenciasCpfAutor.length);
+        const valores = await (0, HeadPdf_1.lePdf)();
+        if (valores == null) {
+            return [];
+        }
+        for (let j = 0; j < valores.length; j++) {
+            if (parseFloat(valores[j].replace(".", "").replace(",", ".")) > 3000) {
+                console.log("1 trueeeeeeeeeeeeee");
+                if (ocorrenciasCpfAutor.length > 1) {
+                    return [true, true];
+                }
+                else {
+                    console.log("2 trueeeeeeeeeeeeee");
+                    return [true];
+                }
             }
-            ArrayVerificarAutor.push(true);
-            return ArrayVerificarAutor;
         }
-        ArrayVerificarAutor.push(false);
-        return ArrayVerificarAutor;
+        return [];
     }
 }
 exports.Emprego = Emprego;
-//# sourceMappingURL=EmpregoSislabra.js.map
+//# sourceMappingURL=empregoSislabra.js.map

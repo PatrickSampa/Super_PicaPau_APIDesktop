@@ -25,13 +25,16 @@
     "morgan": " ^1.10.0 ",
     "node-fetch": "^3.3.1",
     "node-html-parser": "^6.1.4",
+    "node-poppler": "^6.2.3",
     "pdf-parse": "^1.1.1",
+    "pdf2html": "^3.1.0",
     "pdf2json": "^3.0.3",
     "pdfreader": "^3.0.0",
     "request": "^2.88.2",
     "string-similarity": "^4.0.4",
     "swagger-jsdoc": "^6.2.5",
     "swagger-ui-express": "^4.5.0",
+    "util": "^0.12.5",
     "xpath": "^0.0.32"
   },
   "devDependencies": {

@@ -39,6 +39,8 @@ import { enderecosEncontrados } from '../GetInformationSislabra/GetInformationEn
 import { doacoesEleitorais } from '../GetInformationSislabra/GetInformationDoacoesEleitorais/DoacoesEleitoraisSislabra';
 import { imoveisSp } from '../GetInformationSislabra/GetInformationImoveis/imoveisSaopaulo'; */
 import { getInformationSislabraForPicaPau } from '../GetInformationSislabra';
+const { Poppler } = require("node-poppler");
+const fs = require("fs");
 
 export class GetInformationFromSapienForSamirUseCase {
 
@@ -56,13 +58,16 @@ export class GetInformationFromSapienForSamirUseCase {
         let tarefaId: any = "";
 
         
-        try {
+        
             let tarefas = await getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta });
             let VerificarSeAindExisteProcesso: boolean = true;
             while(VerificarSeAindExisteProcesso){
 
                 for (var i = 0; i <= tarefas.length - 1; i++) {
                     console.log("Qantidade faltando triar", (tarefas.length - i));
+                    try{
+                        
+                    
                     tarefaId = tarefas[i].id; 
                     const objectGetArvoreDocumento: IGetArvoreDocumentoDTO = { nup: tarefas[i].pasta.NUP, chave: tarefas[i].pasta.chaveAcesso, cookie, tarefa_id: tarefas[i].id }
                     let arrayDeDocumentos: ResponseArvoreDeDocumento[];
@@ -230,6 +235,7 @@ export class GetInformationFromSapienForSamirUseCase {
                     var objDosis: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - ANEXADO" && Documento.documentoJuntado.tipoDocumento.sigla == "PESBEN");
                     var objDosis2: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - AUTOR");
                     var objDosis3: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - POSSÍVEL CÔNJUGE OU COMPANHEIRO");
+                    var objDosie4: any = arrayDeDocumentos.filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "SITCADCPF")
                     
                     if(objDosis[0] != undefined){
                         arrayIdSislabra.push(objDosis[0]);
@@ -239,6 +245,9 @@ export class GetInformationFromSapienForSamirUseCase {
                     }
                     if(objDosis3[0] != undefined){
                         arrayIdSislabra.push(objDosis3[0])
+                    }
+                    if(objDosie4[0] != undefined){
+                        arrayIdSislabra.push(objDosie4[0])
                     }
                     /* const idParaBuscarIdSislabra1: number = objDosis[0].documentoJuntado.componentesDigitais[0].id;
                     const idParaBuscarIdSislabra2: number = objDosis[1].documentoJuntado.componentesDigitais[0].id; */
@@ -271,13 +280,20 @@ export class GetInformationFromSapienForSamirUseCase {
                     //console.log(arrayDosIDParaBuscarpdf);
                     
                     
-    
-    
-    
-                
-                 
+                    /* const file = fs.readFileSync("src/modules/GetInformationFromSapienForSamir/sislabra.pdf");
+                    const poppler = new Poppler();
+                    const options = {
+                        firstPageToConvert: 2,
+                        lastPageToConvert: 5,
+                    };
+
+                    poppler.pdfToHtml(file, "tester.html", options).then((res) => {
+                        console.log(res);
+                    }); */
+                                    
                     
                     
+                                        
                     
                     
                     
@@ -547,7 +563,7 @@ export class GetInformationFromSapienForSamirUseCase {
                         let impedSislabra: Array<string> = await getInformationSislabraForPicaPau.impedimentos(arrayDosIDParaBuscarpdf, cookie, CpfAutor)
                         responseForPicaPau.push(...impedSislabra)
                     
-    
+                        //teste
                         /* let impedCapa: Array<String> = await impedimentosCapa.Impedimentos(await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie));
                         responseForPicaPau.push(...impedCapa);
                         
@@ -609,6 +625,11 @@ export class GetInformationFromSapienForSamirUseCase {
     
     
                     responseForPicaPau = [];
+                    } catch (error) {
+                        console.log(error);
+                        (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "ERRO AO TRIAR ESSE DOCUMENTO", tarefaId }));
+                        continue;
+                    }
                 }
                 tarefas = await getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta });
                 if(tarefas.length==0){
@@ -617,17 +638,8 @@ export class GetInformationFromSapienForSamirUseCase {
             }
             
             return await response
-        } catch (error) {
-            console.log(error);
-            console.log(response.length);
-            (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "ERRO AO TRIAR ESSE DOCUMENTO", tarefaId }));
-            if (response.length > 0) {
-                return await response
-            }
-            else {
-                new error;
-            }
-        }
+        
+        
     }
 
 }

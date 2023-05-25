@@ -14,6 +14,8 @@ const GetCapaDoPassiva_1 = require("../GetCapaDoPassiva");
 const GetInformationCapa_1 = require("../GetInformationCapa");
 const GetInformationDossie_1 = require("../GetInformationDossie");
 const GetInformationSislabra_1 = require("../GetInformationSislabra");
+const { Poppler } = require("node-poppler");
+const fs = require("fs");
 class GetInformationFromSapienForSamirUseCase {
     async execute(data) {
         const cookie = await LoginUsuario_1.loginUseCase.execute(data.login);
@@ -22,12 +24,12 @@ class GetInformationFromSapienForSamirUseCase {
         let response = [];
         let responseForPicaPau = [];
         let tarefaId = "";
-        try {
-            let tarefas = await GetTarefa_1.getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta });
-            let VerificarSeAindExisteProcesso = true;
-            while (VerificarSeAindExisteProcesso) {
-                for (var i = 0; i <= tarefas.length - 1; i++) {
-                    console.log("Qantidade faltando triar", (tarefas.length - i));
+        let tarefas = await GetTarefa_1.getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta });
+        let VerificarSeAindExisteProcesso = true;
+        while (VerificarSeAindExisteProcesso) {
+            for (var i = 0; i <= tarefas.length - 1; i++) {
+                console.log("Qantidade faltando triar", (tarefas.length - i));
+                try {
                     tarefaId = tarefas[i].id;
                     const objectGetArvoreDocumento = { nup: tarefas[i].pasta.NUP, chave: tarefas[i].pasta.chaveAcesso, cookie, tarefa_id: tarefas[i].id };
                     let arrayDeDocumentos;
@@ -147,6 +149,7 @@ class GetInformationFromSapienForSamirUseCase {
                     var objDosis = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - ANEXADO" && Documento.documentoJuntado.tipoDocumento.sigla == "PESBEN");
                     var objDosis2 = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - AUTOR");
                     var objDosis3 = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - POSSÍVEL CÔNJUGE OU COMPANHEIRO");
+                    var objDosie4 = arrayDeDocumentos.filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "SITCADCPF");
                     if (objDosis[0] != undefined) {
                         arrayIdSislabra.push(objDosis[0]);
                     }
@@ -155,6 +158,9 @@ class GetInformationFromSapienForSamirUseCase {
                     }
                     if (objDosis3[0] != undefined) {
                         arrayIdSislabra.push(objDosis3[0]);
+                    }
+                    if (objDosie4[0] != undefined) {
+                        arrayIdSislabra.push(objDosie4[0]);
                     }
                     if (arrayIdSislabra.length <= 0) {
                         (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "SISLABRA NÃO ENCONTRADO", tarefaId }));
@@ -194,24 +200,18 @@ class GetInformationFromSapienForSamirUseCase {
                     }
                     responseForPicaPau = [];
                 }
-                tarefas = await GetTarefa_1.getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta });
-                if (tarefas.length == 0) {
-                    VerificarSeAindExisteProcesso = false;
+                catch (error) {
+                    console.log(error);
+                    (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "ERRO AO TRIAR ESSE DOCUMENTO", tarefaId }));
+                    continue;
                 }
             }
-            return await response;
-        }
-        catch (error) {
-            console.log(error);
-            console.log(response.length);
-            (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "ERRO AO TRIAR ESSE DOCUMENTO", tarefaId }));
-            if (response.length > 0) {
-                return await response;
-            }
-            else {
-                new error;
+            tarefas = await GetTarefa_1.getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta });
+            if (tarefas.length == 0) {
+                VerificarSeAindExisteProcesso = false;
             }
         }
+        return await response;
     }
 }
 exports.GetInformationFromSapienForSamirUseCase = GetInformationFromSapienForSamirUseCase;
