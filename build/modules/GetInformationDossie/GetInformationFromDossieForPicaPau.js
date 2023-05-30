@@ -1,22 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GetInformationDossieForPicaPau = void 0;
-const InformatioReque_1 = require("./InformatioReque");
-const InformationPro_1 = require("./InformationPro");
+const InformatioRequerimento_1 = require("./InformatioRequerimento");
+const InformationPrevidenciarias_1 = require("./InformationPrevidenciarias");
 const GetInformationIdade_1 = require("./GetInformationIdade");
 const GetInformationLitispendencia_1 = require("./GetInformationLitispendencia");
 const GetInformationSeguradoEspecial_1 = require("./GetInformationSeguradoEspecial");
-const InformatioReque_2 = require("./InformatioReque");
+const InformatioRequerimento_2 = require("./InformatioRequerimento");
 class GetInformationDossieForPicaPau {
     async impedimentos(paginaDosprevFormatada, parginaDosPrev) {
         const ArrayImpedimentos = [];
         try {
-            const DatasAtualEMenosDezesseis = await InformatioReque_1.requerimentos.dataRequerimento(paginaDosprevFormatada);
+            const DatasAtualEMenosDezesseis = await InformatioRequerimento_1.requerimentos.dataRequerimento(paginaDosprevFormatada);
             if (DatasAtualEMenosDezesseis[0] == null) {
                 ArrayImpedimentos.push("AUSÊNCIA DE REQUERIMENTO AUTOR");
             }
             else {
-                const verificarDataFinal = await InformationPro_1.dataPrevidencias.Previdenciarias(DatasAtualEMenosDezesseis[0], DatasAtualEMenosDezesseis[1], paginaDosprevFormatada);
+                const verificarDataFinal = await InformationPrevidenciarias_1.dataPrevidencias.Previdenciarias(DatasAtualEMenosDezesseis[0], DatasAtualEMenosDezesseis[1], paginaDosprevFormatada);
                 if (verificarDataFinal) {
                     ArrayImpedimentos.push("EMPREGO");
                 }
@@ -37,7 +37,7 @@ class GetInformationDossieForPicaPau {
             ArrayImpedimentos.push("LITISPÊNDENCIA");
         }
         const segurado = await GetInformationSeguradoEspecial_1.seguradoEspecial.handle(parginaDosPrev);
-        const requerimentoAtivo = await InformatioReque_2.requerimentosAtivos.handle(paginaDosprevFormatada);
+        const requerimentoAtivo = await InformatioRequerimento_2.requerimentosAtivos.handle(paginaDosprevFormatada);
         if (segurado !== -1 || requerimentoAtivo == true) {
             ArrayImpedimentos.push("CONCESSÃO ANTERIOR");
         }

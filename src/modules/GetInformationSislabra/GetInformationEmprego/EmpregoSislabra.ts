@@ -3,7 +3,7 @@ import { error } from "console";
 import { lePdf } from "../../GetPdfSislabra/GetPdfSislabra/HeadPdf";
 export class Emprego{
     async handle(StringSislabra: String, cpfAutor: any): Promise</* Array<boolean> */ any>{
-
+        
         function extrairDados(texto): Array<any> {
             const padrao = /\d{2}\/\d{2}\/\d{4}[^]*?(?=\d{2}\/\d{2}\/\d{4}|\b[a-zA-Z]+\b|$)/g;
             const matches = texto.matchAll(padrao);
@@ -15,7 +15,7 @@ export class Emprego{
           
             return dados;
           }
-
+          
 
           function formatarValor(valor) {
             const padraoData = /^\d{2}\/\d{2}\/\d{4}/; // Expressão regular para verificar o padrão de data
@@ -32,10 +32,11 @@ export class Emprego{
             indiceCpf = novaSislabra.indexOf(cpfAutor,  indiceCpf + 1);
         }
 
-        console.log("lang" + ocorrenciasCpfAutor.length)
+        
             
             
             const valores = await lePdf();
+            console.log("valores: " + valores)
             if(valores == null){
                 return [];
             }
@@ -55,6 +56,7 @@ export class Emprego{
                         }
                 }
             }
+            
         return [];
 
 

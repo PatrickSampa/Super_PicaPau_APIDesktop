@@ -26,19 +26,17 @@ class Emprego {
             ocorrenciasCpfAutor.push(indiceCpf);
             indiceCpf = novaSislabra.indexOf(cpfAutor, indiceCpf + 1);
         }
-        console.log("lang" + ocorrenciasCpfAutor.length);
         const valores = await (0, HeadPdf_1.lePdf)();
+        console.log("valores: " + valores);
         if (valores == null) {
             return [];
         }
         for (let j = 0; j < valores.length; j++) {
             if (parseFloat(valores[j].replace(".", "").replace(",", ".")) > 3000) {
-                console.log("1 trueeeeeeeeeeeeee");
                 if (ocorrenciasCpfAutor.length > 1) {
                     return [true, true];
                 }
                 else {
-                    console.log("2 trueeeeeeeeeeeeee");
                     return [true];
                 }
             }

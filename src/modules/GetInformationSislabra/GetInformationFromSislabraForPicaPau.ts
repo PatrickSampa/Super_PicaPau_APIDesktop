@@ -11,8 +11,8 @@ import { imoveisRurais } from "./GetInformationImoveisRurais";
 import { embarcacoes } from "./GetInformationEmbarcacoes";
 import { aeronaves } from "./GetInformationAeronave";
 import { emprego } from "./GetInformationEmprego";
-import { criarHtml } from "../GetPdfSislabra/GetPdfSislabra/ForHtml";
-import { excluirArquivosComPrefixo } from "../GetPdfSislabra/GetPdfSislabra/HeadPdfSislabraHtml";
+import { criarHtml } from "../GetPdfSislabra/GetPdfSislabra/CreateHtml";
+import { excluirArquivosComPrefixo } from "../GetPdfSislabra/GetPdfSislabra/DeleteHtml";
 import { error } from "console";
 import { lePdf } from "../GetPdfSislabra/GetPdfSislabra/HeadPdf";
 
@@ -48,7 +48,6 @@ export class GetInformationSislabraForPicaPau{
                         await downloadPDFWithCookies(`https://sapiens.agu.gov.br/documento/${arrayDosIDParaBuscarpdf[i]}`,cookie)
                         .then(() => console.log('PDF downloaded successfully!'))
                         .catch((error) => console.error('Error downloading PDF:', error));
-                        console.log("Entrou aqui")
                         try{
                             console.log("aqui")
                         const pdf = await readPDF('build/modules/GetPdfSislabra/GetPdfSislabra/sislabra.pdf')
@@ -59,7 +58,7 @@ export class GetInformationSislabraForPicaPau{
                         /* await criarHtml().then(() => console.log("ok")).catch((error) => console.log(error)); */
 
                         
-                            //
+                            
                             //VERIFICAÇÃO IMPEDITIVO EMPRESA
                             const impedEmpresa: Array<boolean> = await empresa.hundle(pdf, cpfAutor);
                             if(impedEmpresa.length >= 2 && VerificarAutorMaisDeUmaAutorEmpresa < 1){
@@ -72,7 +71,7 @@ export class GetInformationSislabraForPicaPau{
                                 console.log("Não tem impeditivo empresa")
                             }
 
-
+                            console.log("segunda parte")
                             //VERIFICAÇÃO IMPEDITIVO VEÍCULO
                             const impeditivoVeiculoBolean: Array<any> = await veiculo.hundle(pdf, cpfAutor);
                             console.log("AQUI NO FOR " +impeditivoVeiculoBolean)
@@ -87,7 +86,7 @@ export class GetInformationSislabraForPicaPau{
                                 responseForPicaPau.push("VEICULO cônjuge")
                             }
 
-                            //console.log(lePdf());
+                            
 
                             //VERIFICAÇÃO IMPEDITIVO ENDERECO
                             /* const enderecosBolean:Array<boolean> = await endereco.handle(pdf, cpfAutor);
@@ -99,6 +98,7 @@ export class GetInformationSislabraForPicaPau{
                                 responseForPicaPau.push("cidade Cônjuge")
                             }
  */
+                            
 
                             //VERIFICAR DOAÇOES ELEITORAIS
                             const doacoesSislabra: Array<boolean> = await doacoesEleitorais.hundle(pdf, cpfAutor);
@@ -110,6 +110,8 @@ export class GetInformationSislabraForPicaPau{
                                 responseForPicaPau.push(" Doações Eleitorais Cônjuge")
                             }
                             
+                            
+
                             //VERIFICAR IMOVEIS EM SP
                             const imoveisSP = await imoveis.handle(pdf, cpfAutor); 
                             if(imoveisSP.length > 1 && VerificarAutorMaisDeUmaAutorImoveis < 1){
@@ -121,7 +123,7 @@ export class GetInformationSislabraForPicaPau{
                             }
 
 
-
+                            console.log("quinta parte")
                             //VERIFICAR DOACOES TSE
                             const doacoesTSE = await doacoesTse.handle(pdf, cpfAutor);
                             if(doacoesTSE.length > 1 && VerificarAutorMaisDeUmaAutorDoacoesTse < 1){
@@ -135,7 +137,7 @@ export class GetInformationSislabraForPicaPau{
 
 
 
-
+                            console.log("secxta parte")
                             //Imoveis Rurais
                             const IImoveisRurais = await imoveisRurais.handle(pdf, cpfAutor); 
                             if(IImoveisRurais.length > 1 && VerificarAutorMaisDeUmaAutorImoveisRurais < 1){
@@ -149,7 +151,7 @@ export class GetInformationSislabraForPicaPau{
 
 
 
-
+                            console.log("setima parte")
                             const IEmbarcacoes = await embarcacoes.handle(pdf, cpfAutor);
                             if(IEmbarcacoes.length > 1 && VerificarAutorMaisDeUmaAutorEmbarcacoes < 1){
                                 VerificarAutorMaisDeUmaAutorEmbarcacoes++;
@@ -160,7 +162,7 @@ export class GetInformationSislabraForPicaPau{
                             }
 
 
-
+                            console.log("oitava parte")
                             const IAeronaves = await aeronaves.handle(pdf, cpfAutor);
                             if(IAeronaves.length > 1 && VerificarAutorMaisDeUmaAutorAeronaves < 1){
                                 VerificarAutorMaisDeUmaAutorAeronaves++;
@@ -173,7 +175,7 @@ export class GetInformationSislabraForPicaPau{
 
 
 
-
+                            console.log("nona parte")
                             console.log("Com o Split:  " + await emprego.handle(pdf, cpfAutor) + "@@");
                             const EEmpregos = await emprego.handle(pdf, cpfAutor);
                             console.log("ddddddddddddddddddddd" + EEmpregos)
@@ -195,7 +197,7 @@ export class GetInformationSislabraForPicaPau{
                         await excluirArquivosComPrefixo();
                         deletePDF('sislabra.pdf');
                         
-                        }catch{
+                        }catch{ 
                             responseForPicaPau.length == 0;
                             responseForPicaPau.push("ERRO AO EXAMINAR SISLABRA")
                             return responseForPicaPau;

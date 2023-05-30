@@ -1,9 +1,9 @@
-import { requerimentos } from "./InformatioReque";
-import { dataPrevidencias } from "./InformationPro";
+import { requerimentos } from "./InformatioRequerimento";
+import { dataPrevidencias } from "./InformationPrevidenciarias";
 
 import { litispendencia } from "./GetInformationLitispendencia";
 import { seguradoEspecial } from "./GetInformationSeguradoEspecial";
-import { requerimentosAtivos } from "./InformatioReque";
+import { requerimentosAtivos } from "./InformatioRequerimento";
 
 export class GetInformationDossieForPicaPauSemIdade{
     async impedimentos(paginaDosprevFormatada: any, parginaDosPrev: any): Promise<Array<string>>{

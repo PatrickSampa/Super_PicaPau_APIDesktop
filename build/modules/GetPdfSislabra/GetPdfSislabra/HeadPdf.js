@@ -8,6 +8,9 @@ async function lePdf() {
     const readFile = (0, util_1.promisify)(fs.readFile);
     console.log("Entrou lêPDF");
     const valor = fs.readFileSync(__dirname + '/testers.html', 'utf8');
+    if (valor.indexOf("Salário Contrato") == -1) {
+        return null;
+    }
     const xx = valor.split('Vínculos Empregatícios');
     const xxx = xx[1].split('Bens Declarados ao TSE');
     const regex = /\b\d{1,3}(?:\.\d{3})*(?:,\d{2})\b/g;
@@ -19,7 +22,6 @@ async function lePdf() {
     for (let i = 1; i < matches.length; i += 2) {
         impares.push(matches[i]);
     }
-    console.log(impares);
     return impares;
 }
 exports.lePdf = lePdf;

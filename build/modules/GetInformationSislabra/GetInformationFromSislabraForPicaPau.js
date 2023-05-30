@@ -13,8 +13,8 @@ const GetInformationImoveisRurais_1 = require("./GetInformationImoveisRurais");
 const GetInformationEmbarcacoes_1 = require("./GetInformationEmbarcacoes");
 const GetInformationAeronave_1 = require("./GetInformationAeronave");
 const GetInformationEmprego_1 = require("./GetInformationEmprego");
-const ForHtml_1 = require("../GetPdfSislabra/GetPdfSislabra/ForHtml");
-const HeadPdfSislabraHtml_1 = require("../GetPdfSislabra/GetPdfSislabra/HeadPdfSislabraHtml");
+const CreateHtml_1 = require("../GetPdfSislabra/GetPdfSislabra/CreateHtml");
+const DeleteHtml_1 = require("../GetPdfSislabra/GetPdfSislabra/DeleteHtml");
 class GetInformationSislabraForPicaPau {
     async impedimentos(arrayDosIDParaBuscarpdf, cookie, cpfAutor) {
         console.log("ENTROU NO FOR DO SISLABRA");
@@ -45,11 +45,10 @@ class GetInformationSislabraForPicaPau {
             await (0, GetPdfForPicaPau_1.downloadPDFWithCookies)(`https://sapiens.agu.gov.br/documento/${arrayDosIDParaBuscarpdf[i]}`, cookie)
                 .then(() => console.log('PDF downloaded successfully!'))
                 .catch((error) => console.error('Error downloading PDF:', error));
-            console.log("Entrou aqui");
             try {
                 console.log("aqui");
                 const pdf = await (0, ReadPdf_1.readPDF)('build/modules/GetPdfSislabra/GetPdfSislabra/sislabra.pdf');
-                await (0, ForHtml_1.criarHtml)();
+                await (0, CreateHtml_1.criarHtml)();
                 const impedEmpresa = await GetInformationEmpresa_1.empresa.hundle(pdf, cpfAutor);
                 if (impedEmpresa.length >= 2 && VerificarAutorMaisDeUmaAutorEmpresa < 1) {
                     VerificarAutorMaisDeUmaAutorEmpresa++;
@@ -62,6 +61,7 @@ class GetInformationSislabraForPicaPau {
                 else {
                     console.log("Não tem impeditivo empresa");
                 }
+                console.log("segunda parte");
                 const impeditivoVeiculoBolean = await GetInformationVeiculo_1.veiculo.hundle(pdf, cpfAutor);
                 console.log("AQUI NO FOR " + impeditivoVeiculoBolean);
                 if (impeditivoVeiculoBolean.length > 1 && VerificarAutorMaisDeUmaAutorVeiculo < 1) {
@@ -93,6 +93,7 @@ class GetInformationSislabraForPicaPau {
                     VerificarAutorMaisDeUmaConjugeImoveis++;
                     responseForPicaPau.push(" Imoveis SP Cônjuge");
                 }
+                console.log("quinta parte");
                 const doacoesTSE = await GetInformationBensTse_1.doacoesTse.handle(pdf, cpfAutor);
                 if (doacoesTSE.length > 1 && VerificarAutorMaisDeUmaAutorDoacoesTse < 1) {
                     VerificarAutorMaisDeUmaAutorDoacoesTse++;
@@ -102,6 +103,7 @@ class GetInformationSislabraForPicaPau {
                     VerificarAutorMaisDeUmaConjugerDoacoesTse++;
                     responseForPicaPau.push("Bens Declarados ao TSE Cônjuge");
                 }
+                console.log("secxta parte");
                 const IImoveisRurais = await GetInformationImoveisRurais_1.imoveisRurais.handle(pdf, cpfAutor);
                 if (IImoveisRurais.length > 1 && VerificarAutorMaisDeUmaAutorImoveisRurais < 1) {
                     VerificarAutorMaisDeUmaAutorImoveisRurais++;
@@ -111,6 +113,7 @@ class GetInformationSislabraForPicaPau {
                     VerificarAutorMaisDeUmaConjugeImoveisRurais++;
                     responseForPicaPau.push("Imoveis Rurais Cônjuge");
                 }
+                console.log("setima parte");
                 const IEmbarcacoes = await GetInformationEmbarcacoes_1.embarcacoes.handle(pdf, cpfAutor);
                 if (IEmbarcacoes.length > 1 && VerificarAutorMaisDeUmaAutorEmbarcacoes < 1) {
                     VerificarAutorMaisDeUmaAutorEmbarcacoes++;
@@ -120,6 +123,7 @@ class GetInformationSislabraForPicaPau {
                     VerificarAutorMaisDeUmaConjugeEmbarcacoes++;
                     responseForPicaPau.push("Embarcações Cônjuge");
                 }
+                console.log("oitava parte");
                 const IAeronaves = await GetInformationAeronave_1.aeronaves.handle(pdf, cpfAutor);
                 if (IAeronaves.length > 1 && VerificarAutorMaisDeUmaAutorAeronaves < 1) {
                     VerificarAutorMaisDeUmaAutorAeronaves++;
@@ -129,6 +133,7 @@ class GetInformationSislabraForPicaPau {
                     VerificarAutorMaisDeUmaConjugeAeronaves++;
                     responseForPicaPau.push("Aeronaves Cônjuge");
                 }
+                console.log("nona parte");
                 console.log("Com o Split:  " + await GetInformationEmprego_1.emprego.handle(pdf, cpfAutor) + "@@");
                 const EEmpregos = await GetInformationEmprego_1.emprego.handle(pdf, cpfAutor);
                 console.log("ddddddddddddddddddddd" + EEmpregos);
@@ -140,7 +145,7 @@ class GetInformationSislabraForPicaPau {
                     VerificarAutorMaisDeUmaConjugeEmpregos++;
                     responseForPicaPau.push("Emprego sislabra Cônjuge");
                 }
-                await (0, HeadPdfSislabraHtml_1.excluirArquivosComPrefixo)();
+                await (0, DeleteHtml_1.excluirArquivosComPrefixo)();
                 (0, GetPdfForPicaPau_2.deletePDF)('sislabra.pdf');
             }
             catch (_a) {

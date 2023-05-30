@@ -41,6 +41,7 @@ import { imoveisSp } from '../GetInformationSislabra/GetInformationImoveis/imove
 import { getInformationSislabraForPicaPau } from '../GetInformationSislabra';
 const { Poppler } = require("node-poppler");
 const fs = require("fs");
+import { CreateHtmlFromPdf } from '../../python_PdfToHtml';
 
 export class GetInformationFromSapienForSamirUseCase {
 
@@ -277,21 +278,10 @@ export class GetInformationFromSapienForSamirUseCase {
                          const idParaBuscarIdSislabra2 = arrayIdSislabra[1].documentoJuntado.componentesDigitais[0].id;
                          arrayDosIDParaBuscarpdf.push(idParaBuscarIdSislabra1, idParaBuscarIdSislabra2);
                     }
-                    //console.log(arrayDosIDParaBuscarpdf);
                     
-                    
-                    /* const file = fs.readFileSync("src/modules/GetInformationFromSapienForSamir/sislabra.pdf");
-                    const poppler = new Poppler();
-                    const options = {
-                        firstPageToConvert: 2,
-                        lastPageToConvert: 5,
-                    };
 
-                    poppler.pdfToHtml(file, "tester.html", options).then((res) => {
-                        console.log(res);
-                    }); */
-                                    
                     
+                    CreateHtmlFromPdf();
                     
                                         
                     
