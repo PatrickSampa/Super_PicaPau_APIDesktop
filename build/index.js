@@ -20,7 +20,8 @@ function createWindows() {
     });
     app_1.expr.get('/', (req, res) => res.send('Hello World 100!'));
     app_1.expr.listen(3000, () => console.log("Visao runing in PORT " + 3000));
-    mainWindow.loadFile("./MenuPrincipal.html");
+    console.log('...');
+    mainWindow.loadFile("./Front_end/MenuPrincipal.html");
     mainWindow.on("ready-to-show", () => mainWindow.show());
 }
 exports.createWindows = createWindows;

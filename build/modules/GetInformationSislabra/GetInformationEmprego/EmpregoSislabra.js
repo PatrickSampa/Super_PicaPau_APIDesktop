@@ -45,4 +45,4 @@ class Emprego {
     }
 }
 exports.Emprego = Emprego;
-//# sourceMappingURL=empregoSislabra.js.map
+//# sourceMappingURL=EmpregoSislabra.js.map
