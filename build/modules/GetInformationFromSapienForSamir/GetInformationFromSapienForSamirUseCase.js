@@ -148,9 +148,10 @@ class GetInformationFromSapienForSamirUseCase {
                         parginaDosPrevFormatada = new JSDOM(parginaDosPrev);
                     }
                     var objDosis = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - ANEXADO" && Documento.documentoJuntado.tipoDocumento.sigla == "PESBEN");
-                    var objDosis2 = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - AUTOR");
-                    var objDosis3 = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - POSSÍVEL CÔNJUGE OU COMPANHEIRO");
-                    var objDosie4 = arrayDeDocumentos.filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "SITCADCPF");
+                    var objDosis2 = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO" && Documento.documentoJuntado.tipoDocumento.sigla == "PESBEN");
+                    var objDosis3 = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - AUTOR");
+                    var objDosis4 = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - POSSÍVEL CÔNJUGE OU COMPANHEIRO");
+                    var objDosis5 = arrayDeDocumentos.filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "SITCADCPF");
                     if (objDosis[0] != undefined) {
                         arrayIdSislabra.push(objDosis[0]);
                     }
@@ -160,8 +161,11 @@ class GetInformationFromSapienForSamirUseCase {
                     if (objDosis3[0] != undefined) {
                         arrayIdSislabra.push(objDosis3[0]);
                     }
-                    if (objDosie4[0] != undefined) {
-                        arrayIdSislabra.push(objDosie4[0]);
+                    if (objDosis4[0] != undefined) {
+                        arrayIdSislabra.push(objDosis4[0]);
+                    }
+                    if (objDosis5[0] != undefined) {
+                        arrayIdSislabra.push(objDosis5[0]);
                     }
                     if (arrayIdSislabra.length <= 0) {
                         (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "SISLABRA NÃO ENCONTRADO", tarefaId }));

@@ -34,7 +34,7 @@ class GetInformationDossieForPicaPau {
         }
         const verificarLitispedencia = await GetInformationLitispendencia_1.litispendencia.funcLitis(paginaDosprevFormatada);
         if (!verificarLitispedencia) {
-            ArrayImpedimentos.push("LITISPÊNDENCIA");
+            ArrayImpedimentos.push("LITISPENDÊNCIA");
         }
         const segurado = await GetInformationSeguradoEspecial_1.seguradoEspecial.handle(parginaDosPrev);
         const requerimentoAtivo = await InformatioRequerimento_2.requerimentosAtivos.handle(paginaDosprevFormatada);

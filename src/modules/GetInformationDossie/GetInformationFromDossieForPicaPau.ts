@@ -40,7 +40,7 @@ export class GetInformationDossieForPicaPau{
 
         const verificarLitispedencia = await litispendencia.funcLitis(paginaDosprevFormatada);
         if(!verificarLitispedencia){   
-            ArrayImpedimentos.push("LITISPÊNDENCIA")
+            ArrayImpedimentos.push("LITISPENDÊNCIA")
                                              
          }
 

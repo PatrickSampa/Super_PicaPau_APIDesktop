@@ -231,8 +231,10 @@ export class GetInformationFromSapienForSamirUseCaseSemIdade {
                     
                     
                     var objDosis: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - ANEXADO" && Documento.documentoJuntado.tipoDocumento.sigla == "PESBEN");
-                    var objDosis2: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - AUTOR");
-                    var objDosis3: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - POSSÍVEL CÔNJUGE OU COMPANHEIRO");
+                    var objDosis2: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO" && Documento.documentoJuntado.tipoDocumento.sigla == "PESBEN");
+                    var objDosis3: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - AUTOR");
+                    var objDosis4: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - POSSÍVEL CÔNJUGE OU COMPANHEIRO");
+                    var objDosis5: any = arrayDeDocumentos.filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "SITCADCPF")
                     
                     if(objDosis[0] != undefined){
                         arrayIdSislabra.push(objDosis[0]);
@@ -242,6 +244,12 @@ export class GetInformationFromSapienForSamirUseCaseSemIdade {
                     }
                     if(objDosis3[0] != undefined){
                         arrayIdSislabra.push(objDosis3[0])
+                    }
+                    if(objDosis4[0] != undefined){
+                        arrayIdSislabra.push(objDosis4[0])
+                    }
+                    if(objDosis5[0] != undefined){
+                        arrayIdSislabra.push(objDosis5[0])
                     }
                     /* const idParaBuscarIdSislabra1: number = objDosis[0].documentoJuntado.componentesDigitais[0].id;
                     const idParaBuscarIdSislabra2: number = objDosis[1].documentoJuntado.componentesDigitais[0].id; */
