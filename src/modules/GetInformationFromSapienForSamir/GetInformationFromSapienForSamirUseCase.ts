@@ -285,7 +285,7 @@ export class GetInformationFromSapienForSamirUseCase {
                     
 
                     
-                    CreateHtmlFromPdf();
+                    /* CreateHtmlFromPdf(); */
                     
                                         
                     

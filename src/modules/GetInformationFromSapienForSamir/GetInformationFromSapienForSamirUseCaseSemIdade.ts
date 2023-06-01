@@ -234,7 +234,7 @@ export class GetInformationFromSapienForSamirUseCaseSemIdade {
                     var objDosis2: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO" && Documento.documentoJuntado.tipoDocumento.sigla == "PESBEN");
                     var objDosis3: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - AUTOR");
                     var objDosis4: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - POSSÍVEL CÔNJUGE OU COMPANHEIRO");
-                    var objDosis5: any = arrayDeDocumentos.filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "SITCADCPF")
+                    var objDosis5: any = arrayDeDocumentos.filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "SITCADCPF");
                     
                     if(objDosis[0] != undefined){
                         arrayIdSislabra.push(objDosis[0]);
