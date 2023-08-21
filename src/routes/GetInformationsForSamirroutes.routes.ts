@@ -34,6 +34,7 @@ export const routerGetInformationsForPicaPau = Router();
 
 
 routerGetInformationsForPicaPau.post("/getInformationFromSapienForSamir", async (req, res) => {
+    console.log(req)
     return getInformationFromSapienForSamirController.handle(req, res);
 })
 
