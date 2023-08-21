@@ -81,6 +81,11 @@ export class GetInformationFromSapienForSamirUseCase {
                         continue
                     }
     
+                    var objDosis: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - ANEXADO" && Documento.documentoJuntado.tipoDocumento.sigla == "PESBEN");
+                    var objDosis2: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO" && Documento.documentoJuntado.tipoDocumento.sigla == "PESBEN");
+                    var objDosis3: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - AUTOR");
+                    var objDosis4: any = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - POSSÍVEL CÔNJUGE OU COMPANHEIRO");
+                    var objDosis5: any = arrayDeDocumentos.filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "SITCADCPF")
     
     
                     const arrayDosIDParaBuscarpdf: Array<number> = [];
@@ -94,7 +99,7 @@ export class GetInformationFromSapienForSamirUseCase {
     
                     
     
-    
+   
     
     
                     var objectDosPrevNaoExisti = procurarDossies[0] == null;
@@ -285,265 +290,8 @@ export class GetInformationFromSapienForSamirUseCase {
                     
 
                     
-                    /* CreateHtmlFromPdf(); */
-                    
-                                        
-                    
-                    
-                    
-                   
-                   
-                    
-                    //console.log(pathNomeAutorFormatado)
-                    /* var VerificarAutorMaisDeUmaAutorEmpresa: number = 0;
-                    var VerificarAutorMaisDeUmaConjugeEmpresa: number = 0;
-                    var VerificarAutorMaisDeUmaAutorVeiculo: number = 0;
-                    var VerificarAutorMaisDeUmaConjugeVeiculo: number = 0;
-                    var VerificarAutorMaisDeUmaAutorEndereco: number = 0;
-                    var VerificarAutorMaisDeUmaConjugeEndereco: number = 0;
-                    var VerificarAutorMaisDeUmaAutorDoacoes: number = 0;
-                    var VerificarAutorMaisDeUmaConjugeDoacoes : number = 0;
-                    var VerificarAutorMaisDeUmaAutorImoveis: number = 0;
-                    var VerificarAutorMaisDeUmaConjugeImoveis : number = 0; */
-    
-                        /* for(let i=0; i<arrayDosIDParaBuscarpdf.length; i++){
-                            //console.log(`https://sapiens.agu.gov.br/documento/${arrayDosIDParaBuscarpdf[i]}`)
-                            await downloadPDFWithCookies(`https://sapiens.agu.gov.br/documento/${arrayDosIDParaBuscarpdf[i]}`,cookie)
-                            .then(() => console.log('PDF downloaded successfully!'))
-                            .catch((error) => console.error('Error downloading PDF:', error));
-                            console.log("Entrou aqui")
-                            try{
-                                console.log("aqui")
-                            const pdf = await readPDF('build/modules/GetPdfSislabra/GetPdfSislabra/sislabra.pdf') */
-                            
-                            /* Ative quando for para produção
-                            const pdf = await readPDF('resources/app/build/modules/GetPdfSislabra/GetPdfSislabra/sislabra.pdf') */
-                            
-    
-                                /* //VERIFICAÇÃO IMPEDITIVO EMPRESA
-                                const impedEmprego: Array<boolean> = verificarArraySislabra(pdf, CpfAutor);
-                                if(impedEmprego.length >= 2 && VerificarAutorMaisDeUmaAutorEmpresa < 1){
-                                    VerificarAutorMaisDeUmaAutorEmpresa++;
-                                    responseForPicaPau.push("Empresa autor")
-                                }else if(impedEmprego[0] == true && VerificarAutorMaisDeUmaConjugeEmpresa < 1 && impedEmprego.length < 2){
-                                    VerificarAutorMaisDeUmaConjugeEmpresa++;
-                                    responseForPicaPau.push("Empresa cônjuge")
-                                }else{
-                                    console.log("Não tem impeditivo empresa")
-                                }
-    
-    
-                                //VERIFICAÇÃO IMPEDITIVO VEÍCULO
-                                const impeditivoVeiculoBolean: Array<any> = impeditivoVeiculo(pdf, CpfAutor);
-                                console.log("AQUI NO FOR " +impeditivoVeiculoBolean)
-                                if(impeditivoVeiculoBolean.length > 1 && VerificarAutorMaisDeUmaAutorVeiculo < 1){
-                                    console.log("VEICULO AUTOR")
-                                    console.log(impeditivoVeiculoBolean.length)
-                                    VerificarAutorMaisDeUmaAutorVeiculo++
-                                    responseForPicaPau.push("VEICULO AUTOR")
-                                }else if(impeditivoVeiculoBolean.length == 1 && impeditivoVeiculoBolean[0] == true && VerificarAutorMaisDeUmaConjugeVeiculo < 1){
-                                    console.log("VEICULO cônjuge")
-                                    VerificarAutorMaisDeUmaConjugeVeiculo++;
-                                    responseForPicaPau.push("VEICULO cônjuge")
-                                }
-    
-    
-                                //VERIFICAÇÃO IMPEDITIVO ENDERECO
-                                const enderecosBolean:Array<boolean> = enderecosEncontrados(pdf, CpfAutor);
-                                if(enderecosBolean.length > 1 && VerificarAutorMaisDeUmaAutorEndereco < 1){
-                                    VerificarAutorMaisDeUmaAutorEndereco++;
-                                    responseForPicaPau.push(" Cidade Autor")
-                                }else if(enderecosBolean.length == 1 && VerificarAutorMaisDeUmaConjugeEndereco < 1){
-                                    VerificarAutorMaisDeUmaConjugeEndereco++;
-                                    responseForPicaPau.push("cidade Cônjuge")
-                                }
-    
-    
-                                //VERIFICAR DOAÇOES ELEITORAIS
-                                const doacoesSislabra = doacoesEleitorais(pdf, CpfAutor);
-                                if(doacoesSislabra.length > 1 && VerificarAutorMaisDeUmaAutorDoacoes < 1){
-                                    VerificarAutorMaisDeUmaAutorDoacoes++
-                                    responseForPicaPau.push(" Doações Eleitorais Autor")
-                                }else if(doacoesSislabra.length == 1 && VerificarAutorMaisDeUmaConjugeDoacoes < 1){
-                                    VerificarAutorMaisDeUmaConjugeDoacoes++
-                                    responseForPicaPau.push(" Doações Eleitorais Cônjuge")
-                                }
-                                
-                                //VERIFICAR IMOVEIS EM SP
-                                const imoveisSP = imoveisSp(pdf, CpfAutor); 
-                                if(imoveisSP.length > 1 && VerificarAutorMaisDeUmaAutorImoveis < 1){
-                                    VerificarAutorMaisDeUmaAutorImoveis++
-                                    responseForPicaPau.push("Imoveis SP Autor")
-                                }else if(imoveisSP.length == 1 && VerificarAutorMaisDeUmaConjugeImoveis < 1){
-                                    VerificarAutorMaisDeUmaConjugeImoveis++
-                                    responseForPicaPau.push(" Imoveis SP Cônjuge")
-                                }
-    
-    
-    
-    
-    
-                            deletePDF('sislabra.pdf');
-                            }catch{
-                                (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "ERRO AO EXAMINAR SISLABRA", tarefaId }))
-                                continue;
-                            }
-                        }
-                        console.log(responseForPicaPau) */
-                        
-                    
-                    
-                    
-    
-    
-                    
-                   
-                      
-                       /*  const procurarAdvogadoPilantraCapa: boolean = IdentificarAdvogadoPilantra((await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie)));
-                        if(!procurarAdvogadoPilantraCapa){
-                            response2.push("IMPEDITIVO ADVOGADO"  );
-                        }
-                        
-                        
-                        
-                        
-    
-    
-    
-                        //Estrutura para identificar a maior data, e fazer a subtração dela
-                        /* const xpathDataRequerimentos = '/html/body/div/div[3]';
-                        const xpathDataRequerimentosFormatado: string = (getXPathText(parginaDosPrevFormatada, xpathDataRequerimentos));
-                        let tamanhoColunasRequerimentos = 2;
-                        const arrayDatas: Array<Date> = [];
-                        let verificarWhileRequerimentos = true;
-                        while(verificarWhileRequerimentos){
-                            if(typeof (getXPathText(parginaDosPrevFormatada, `/html/body/div/div[3]/table/tbody/tr[${tamanhoColunasRequerimentos}]`)) == 'object'){
-                                verificarWhileRequerimentos = false; 
-                                break;
-                            }
-                            tamanhoColunasRequerimentos++;
-                        }
-                        
-                            for(let t=2; t<tamanhoColunasRequerimentos; t++){
-                                if(typeof (getXPathText(parginaDosPrevFormatada,`/html/body/div/div[3]/table/tbody/tr[${t}]`)) === 'string'){
-                                    const xpathColunaRequerimentos = `/html/body/div/div[3]/table/tbody/tr[${t}]`;
-                                    const xpathCoulaFormatadoRequerimentos: string = getXPathText(parginaDosPrevFormatada, xpathColunaRequerimentos);
-                                    if(xpathCoulaFormatadoRequerimentos.indexOf("INDEFERIDO") !== -1){
-                                        const date: Array<Date> = extractDatesFromString(xpathCoulaFormatadoRequerimentos);
-                                       
-                                        arrayDatas.push(...date);
-                                    }
-                                }
-                            }
-                            const dataAtual = encontrarDataMaisAtual(arrayDatas);
-                            const dataMenosdezesseis = SubtrairAnoMaisAtual(dataAtual, -16); */
-                            /* (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `${dataAtual}`, tarefaId }))
-                            continue; */
-    
-    
-    
-                            
-    
-    
-    
-                            //const arrayTeste: Array<string> = [];
-                            //Estrutura para identificar data de emprego
-                            /* let tamanhoColunaPrevidenciarias = 2;
-                            let verificarWhilePrevidenciarias = true;
-                            while(verificarWhilePrevidenciarias){
-                                if(typeof (getXPathText(parginaDosPrevFormatada, `/html/body/div/div[4]/table/tbody/tr[${tamanhoColunaPrevidenciarias}]`)) == 'object'){
-                                    verificarWhilePrevidenciarias = false; 
-                                    break;
-                                }
-                                tamanhoColunaPrevidenciarias++;
-                            }
-                            
-                             for(let p=2; p<tamanhoColunaPrevidenciarias; p++){
-                                if(typeof (getXPathText(parginaDosPrevFormatada,`/html/body/div/div[4]/table/tbody/tr[${p}]`)) === 'string'){
-                                    const xpathColunaPrevidenciarias = `/html/body/div/div[4]/table/tbody/tr[${p}]`;
-                                    const xpathCoulaFormatadoPrevidenciarias: string = getXPathText(parginaDosPrevFormatada, xpathColunaPrevidenciarias);
-                                    if(xpathCoulaFormatadoPrevidenciarias.indexOf("Empregado") !== -1 || xpathCoulaFormatadoPrevidenciarias.indexOf("Contribuinte Individual") !== -1){
-                                        const datasEmprego = converterDatasParaDate(ordenarDatas(getXPathText(parginaDosPrevFormatada, xpathColunaPrevidenciarias)));             
-                                        const impeditivoBoolean = verificarDataNoPeriodoDeDezesseisAnos(dataAtual, dataMenosdezesseis, datasEmprego[0], datasEmprego[1]);
-                                        if(impeditivoBoolean){
-                                            responseForPicaPau.push("IMPEDITIVO EMPREGO")
-                                            break;
-                                        }
-                                    }
-                                    
-                                }
-                            } */
-                            
-    
-                        
-    
-    
-                        //Calcular idade;
-                        /* const dataNascXpath: string = "/html/body/div/div[1]/table/tbody/tr[8]/td/text()";
-                        const dataAjuizXpath: string = "/html/body/div/div[1]/table/tbody/tr[2]/td";
-                        const generoXptah: string = "/html/body/div/div[1]/table/tbody/tr[11]/td"
-                        const dataAjuizFormatado: string = correçaoDoErroDeFormatoDoSapiens(getXPathText(parginaDosPrevFormatada, dataAjuizXpath));
-                        const dataNascFormatado: string = correçaoDoErroDeFormatoDoSapiens(getXPathText(parginaDosPrevFormatada, dataNascXpath));
-                        const generoFormatado: string = correçaoDoErroDeFormatoDoSapiens(getXPathText(parginaDosPrevFormatada, generoXptah));;
-                        const funcIdade: Boolean = calcIdade(dataNascFormatado, dataAjuizFormatado, generoFormatado);
-                        if(!funcIdade){
-                            response2.push("IMPEDITIVO IDADE")
-                            //console.log("Entrou no if do impeditivo")
-                        } */
-    
-                        /* const verificarIdade:boolean = VerificarIdadeCapa(parginaDosPrevFormatada)
-                        if(!verificarIdade){
-                            response2.push("IMPEDITIVO IDADE")
-                        } */
-                        
-    
-    
-                    
-                    
-                       /*  deletePDF('sislabra.pdf') */
-                         //Verificar litispedência                                                       
-                        /* const xpathRelacaoProcesso = "/html/body/div/div[2]/table/tbody/tr[2]/td";                   
-                        const xpathRelacaoProcessoFormatada: string = (getXPathText(parginaDosPrevFormatada, xpathRelacaoProcesso).trim());
-                        const StringParaVerificar: string = "Não há relação dos processos movidos pelo autor contra o INSS.";
-                        const xpathRelacaoProcessoMovidosFormatada:boolean = xpathRelacaoProcessoFormatada===StringParaVerificar;
-                        if(!xpathRelacaoProcessoMovidosFormatada){   
-                                response2.push("IMPEDITIVO LITISPÊNDENCIA")
-                                                 
-                        } */
-                    
-    
-    
-    
-    
-                        //Verificar Segurado especial
-    
-                   
-                        //verificar segurado codigo 2.0
-                        /* const procurarVariavelSeguradoEspecial: number = parginaDosPrev.indexOf("SEGURADO_ESPECIAL");
-                        if(procurarVariavelSeguradoEspecial !== -1){
-                            response2.push("CONCESSÃO ANTERIOR")
-                        } */
-    
-     
-    
-    
-                    /* const xpathInformacaoDeCabeçalho = "/html/body/div/p[2]/b[1]"
-                    const informacaoDeCabeçalho = getXPathText(parginaDosPrevFormatada, xpathInformacaoDeCabeçalho);
-                    //console.log("informacaoDeCabeçalho", informacaoDeCabeçalho)
-                    const informacaoDeCabeçalhoNaoExiste = !informacaoDeCabeçalho;
-                    //console.log(informacaoDeCabeçalhoNaoExiste)
-                    if (informacaoDeCabeçalhoNaoExiste) {
-                        console.log("DOSPREV INVALIDO");
-                        (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV INVALIDO", tarefaId }))
-                        continue
-                    }
-                    // ative quando for para produçao
-                    if (VerificaçaoSeDosPrevInvalido(informacaoDeCabeçalho)) {
-                        console.log("DOSPREV INVALIDO");
-                        (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV INVALIDO", tarefaId }))
-                        continue
-                    } */
-    
+                   //TESTES
+                //const t = getXPathText(parginaDosPrevFormatada, "/html/body/div/div[1]/table/tbody/tr[7]/td")
     
                     
                    
@@ -557,47 +305,7 @@ export class GetInformationFromSapienForSamirUseCase {
                         let impedSislabra: Array<string> = await getInformationSislabraForPicaPau.impedimentos(arrayDosIDParaBuscarpdf, cookie, CpfAutor)
                         responseForPicaPau.push(...impedSislabra)
                     
-                        //teste
-                        /* let impedCapa: Array<String> = await impedimentosCapa.Impedimentos(await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie));
-                        responseForPicaPau.push(...impedCapa);
                         
-    
-                        let impedDossie: Array<string> = await getInformationDossieForPicaPau.impedimentos(parginaDosPrevFormatada, parginaDosPrev);
-                        responseForPicaPau.push(...impedDossie)
-    
-    
-    /*                 var beneficios = await getInformaçoesIniciasDosBeneficios(parginaDosPrevFormatada)
-                    if (beneficios.length <= 0) {
-                        console.log("DOSPREV SEM BENEFICIO VALIDOS");
-                        (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV SEM BENEFICIO VALIDOS", tarefaId }))
-                        continue
-                    }
-                    beneficios = await getInformaçoesSecudariaDosBeneficios(beneficios, parginaDosPrevFormatada)
-    
-                    const xpathNumeroDoProcesso = "/html/body/div/div/table/tbody/tr/td"
-                    const numeroDoProcesso: string = getXPathText(parginaDosPrevFormatada, xpathNumeroDoProcesso);
-    
-                    const xpathdataAjuizamento = "/html/body/div/div[1]/table/tbody/tr[2]/td"
-                    const dataAjuizamento: string = getXPathText(parginaDosPrevFormatada, xpathdataAjuizamento);
-    
-                    const xpathNome = "/html/body/div/div[1]/table/tbody/tr[6]/td[1]"
-                    const nome: string = getXPathText(parginaDosPrevFormatada, xpathNome);
-    
-                    const xpathCpf = "/html/body/div/div[1]/table/tbody/tr[7]/td"
-                    const cpf: string = getXPathText(parginaDosPrevFormatada, xpathCpf);
-    
-                    const urlProcesso = `https://sapiens.agu.gov.br/visualizador?nup=${tarefas[i].pasta.NUP}&chave=${tarefas[i].pasta.chaveAcesso}&tarefaId=${tarefas[i].id}`
-                    // console.log("urlProcesso", urlProcesso, "cpf", cpf, "nome", nome, "dataAjuizamento", dataAjuizamento, "numeroDoProcesso", numeroDoProcesso);
-                    const citacao = coletarCitacao(arrayDeDocumentos)
-                    let informationsForCalculeDTO: IInformationsForCalculeDTO = await fazerInformationsForCalculeDTO(beneficios, numeroDoProcesso, dataAjuizamento, nome, cpf, urlProcesso, citacao, parseInt(tarefaId))
-                    // { beneficio: "teste", dibAnterior: "teste", beneficioAcumuladoBoolean: false, dibInicial: "teste", dip: "teste", id: parseInt(tarefaId), nb: "teste", rmi: "teste", tipo: "teste", numeroDoProcesso, dataAjuizamento, nome, cpf, urlProcesso, citacao },
-                    console.log(informationsForCalculeDTO);
-                    response.push(informationsForCalculeDTO);
-                    // Ativar quando entrar em produção
-                    await updateEtiquetaUseCase.execute({ cookie, etiqueta: "TESTE API", tarefaId }) */
-                    
-    
-    //console.log(response2)
                     
                     if(responseForPicaPau.length==0){
                         await updateEtiquetaUseCase.execute({cookie, etiqueta: "PROCESSO LIMPO", tarefaId});

@@ -41,6 +41,13 @@ class GetInformationFromSapienForSamirUseCase {
                         (await UpdateEtiqueta_1.updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV COM FALHA NA PESQUISA", tarefaId }));
                         continue;
                     }
+                    var objDosis = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - ANEXADO" && Documento.documentoJuntado.tipoDocumento.sigla == "PESBEN");
+                    var objDosis2 = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO" && Documento.documentoJuntado.tipoDocumento.sigla == "PESBEN");
+                    var objDosis3 = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - AUTOR");
+                    var objDosis4 = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - POSSÍVEL CÔNJUGE OU COMPANHEIRO");
+                    var objDosis5 = arrayDeDocumentos.filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "SITCADCPF");
+                    var objDosis5 = arrayDeDocumentos.filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "SITCADCPF");
+                    console.log("DASDASDDASSASAASADASDA: " + objDosis, objDosis2, objDosis3, objDosis4);
                     const arrayDosIDParaBuscarpdf = [];
                     const arrayIdSislabra = [];
                     const paginaCapaFormatada = new JSDOM(await GetCapaDoPassiva_1.getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie));
@@ -146,11 +153,6 @@ class GetInformationFromSapienForSamirUseCase {
                         parginaDosPrev = await GetDocumento_1.getDocumentoUseCase.execute({ cookie, idDocument: idDosprevParaPesquisa });
                         parginaDosPrevFormatada = new JSDOM(parginaDosPrev);
                     }
-                    var objDosis = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - ANEXADO" && Documento.documentoJuntado.tipoDocumento.sigla == "PESBEN");
-                    var objDosis2 = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO" && Documento.documentoJuntado.tipoDocumento.sigla == "PESBEN");
-                    var objDosis3 = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - AUTOR");
-                    var objDosis4 = arrayDeDocumentos.filter(Documento => Documento.movimento == "JUNTADA DE DOCUMENTO - SISLABRA - POSSÍVEL CÔNJUGE OU COMPANHEIRO");
-                    var objDosis5 = arrayDeDocumentos.filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "SITCADCPF");
                     if (objDosis[0] != undefined) {
                         arrayIdSislabra.push(objDosis[0]);
                     }
