@@ -16,7 +16,6 @@ const GetInformationDossie_1 = require("../GetInformationDossie");
 const GetInformationSislabra_1 = require("../GetInformationSislabra");
 const { Poppler } = require("node-poppler");
 const fs = require("fs");
-const python_PdfToHtml_1 = require("../../python_PdfToHtml");
 class GetInformationFromSapienForSamirUseCase {
     async execute(data) {
         const cookie = await LoginUsuario_1.loginUseCase.execute(data.login);
@@ -184,7 +183,6 @@ class GetInformationFromSapienForSamirUseCase {
                         const idParaBuscarIdSislabra2 = arrayIdSislabra[1].documentoJuntado.componentesDigitais[0].id;
                         arrayDosIDParaBuscarpdf.push(idParaBuscarIdSislabra1, idParaBuscarIdSislabra2);
                     }
-                    (0, python_PdfToHtml_1.CreateHtmlFromPdf)();
                     let impedCapa = await GetInformationCapa_1.impedimentosCapa.Impedimentos(await GetCapaDoPassiva_1.getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie));
                     responseForPicaPau.push(...impedCapa);
                     let impedDossie = await GetInformationDossie_1.getInformationDossieForPicaPau.impedimentos(parginaDosPrevFormatada, parginaDosPrev);
